@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn {
+        @apply bg-indigo-600 shadow-md text-white px-3 py-2 rounded-md text-sm;
+    }
+
+    .card {
+        @apply p-3 rounded-md bg-white shadow-md h-full;
+    }
+
+    .form-control {
+        @apply appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 
+        placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500
+        focus:border-indigo-500 focus:z-10 sm:text-sm;
+    }
+
+    .btn-full {
+        @apply relative w-full flex justify-center px-4 py-2 border border-transparent text-sm font-medium 
+        rounded-md text-white bg-indigo-600 hover:bg-indigo-700
+        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+    }
+    
+    /* sidebar */
+    .sidebar {
+        @apply w-64 h-screen bg-gray-900 text-white;
+    }
+
+    .sidebar-title {
+        @apply text-center text-white text-sm bg-gray-900 p-4 border-b border-gray-500;
+    }
+
+    .sidebar-avatar {
+        @apply mt-0 p-4 bg-gray-900 border-gray-500;
+    }
+
+    .sidebar-menu {
+        @apply p-4;
+    }
+
+    /* navbar */
+
+    .navbar {
+        @apply bg-gray-900 p-1 w-full fixed;
+    }
+
+    .navbar-container {
+        @apply container flex justify-between items-center fixed;
+    }
+
+    .navbar-title {
+        @apply text-white font-bold text-2xl;
+    }
+
+    .nav-link {
+        @apply text-gray-300 text-sm p-2 rounded-md hover:bg-gray-700 block;
+    }
+
+    .nav-link i {
+        @apply mr-2 w-4 text-center;
+    }
+
+    .poster-index {
+        @apply transform scale-75 mx-auto pt-2;
+    }
+
+    .show-pic-index {
+        @apply  transform scale-50
+    }
+
+    .text-span {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .carousel-container {
+        width: 100%;
+        /* text-align: center; */
+    }
+      
+    .carousel-slide {
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .slide {
+        transition: transform all 1s ease-in, opacity 1.5s ease-in-out;
+    }
+    
+    .slide-active {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* computer */
+    @media (min-width: 768px){
+        /* sidebar */
+        .sidebar {
+            display: block;
+        }
+
+        /* navbar */
+
+        .navbar {
+            display: block;
+        }
+
+        /* .poster-index {
+            height: 140;
+        } */
+
+        .show-pic-index {
+            width: 600;
+            height: 450;
+        }
+    }
+
+    /* mobile */
+    @media (max-width: 767.98px){   
+        /* sidebar */
+        .sidebar {
+            display: none;;
+        }
+
+        /* navbar */
+
+        .navbar {
+            display: block;
+        }
+    }
+
+}
