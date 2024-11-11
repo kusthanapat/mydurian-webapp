@@ -1,7 +1,6 @@
 <script setup>
     import VueApexCharts from 'vue3-apexcharts'
     import { ref, onMounted } from 'vue'
-
     definePageMeta({
         layout: "defaultuser"
     })
@@ -358,45 +357,55 @@
 </script>
 
 <template>
-    <div class="h-full w-full pr-28 pl-28 space-y-16 mt-10">
-        <div class="flex w-full justify-between items-center pr-52 pl-52">
-            <VueApexCharts type="radialBar" :options="tempChart" :series="seriesData" height="350" />
-            <VueApexCharts type="radialBar" :options="humiChart" :series="seriesData" height="350" />
-        </div>
-    </div>
+    <div class="flex flex-col justify-center items-center space-y-8">
+        <div class="h-full w-full flex justify-between space-x-20 pr-28 pl-28 mt-20">
+            <div class="flex flex-col w-1/2 justify-between items-center bg-slate-500 rounded-lg">
+                <div class="w-full flex justify-start pt-4 pl-6">
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
+                </div>
+                <div class="flex justify-between items-center">
+                    <VueApexCharts type="radialBar" :options="tempChart" :series="seriesData" height="350" />
+                    <VueApexCharts type="radialBar" :options="stChart" :series="seriesData" height="350" />
+                </div>
+            </div>
 
-    <div class="h-full w-full pr-28 pl-28 space-y-16 mt-10">
-        <div class="flex w-full justify-between items-center pr-52 pl-52">
-            <VueApexCharts type="radialBar" :options="pressureChart" :series="seriesData" height="350" />
-            <VueApexCharts type="radialBar" :options="luxChart" :series="seriesData" height="350" />
+            <div class="flex flex-col w-1/2 justify-between items-center bg-slate-500 rounded-lg">
+                <div class="w-full flex justify-start pt-4 pl-6">
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Humidity</p>
+                </div>
+                <div class="flex justify-between items-center">
+                    <VueApexCharts type="radialBar" :options="humiChart" :series="seriesData" height="350" />
+                    <VueApexCharts type="radialBar" :options="shChart" :series="seriesData" height="350" />
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="h-full w-full pr-28 pl-28 space-y-16 mt-10">
-        <div class="flex w-full justify-between items-center pr-52 pl-52">
-            <VueApexCharts type="radialBar" :options="stChart" :series="seriesData" height="350" />
-            <VueApexCharts type="radialBar" :options="shChart" :series="seriesData" height="350" />
+        <div class="flex flex-col w-3/4 justify-center items-center bg-slate-500 rounded-lg">
+            <div class="flex flex-col w-1/2 justify-between items-center bg-slate-500 rounded-lg">
+                <div class="w-full flex justify-start pt-4 pl-6">
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Soil</p>
+                </div>
+                <div class="flex justify-between items-center">
+                    <VueApexCharts type="radialBar" :options="sphChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="snChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="spChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="skChart" :series="seriesData" height="300" />
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="h-full w-full pr-28 pl-28 space-y-16 mt-10">
-        <div class="flex w-full justify-between items-center pr-52 pl-52">
-            <VueApexCharts type="radialBar" :options="sphChart" :series="seriesData" height="350" />
-            <VueApexCharts type="radialBar" :options="secChart" :series="seriesData" height="350" />
-        </div>
-    </div>
-
-    <div class="h-full w-full pr-28 pl-28 space-y-16 mt-10">
-        <div class="flex w-full justify-between items-center pr-52 pl-52">
-            <VueApexCharts type="radialBar" :options="snChart" :series="seriesData" height="350" />
-            <VueApexCharts type="radialBar" :options="spChart" :series="seriesData" height="350" />
-        </div>
-    </div>
-
-    <div class="h-full w-full pr-28 pl-28 space-y-16 mt-10">
-        <div class="flex w-full justify-between items-center pr-52 pl-52">
-            <VueApexCharts type="radialBar" :options="skChart" :series="seriesData" height="350" />
-            <VueApexCharts type="radialBar" :options="windChart" :series="seriesData" height="350" />
+        <div class="flex flex-col w-3/4 justify-center items-center bg-slate-500 rounded-lg">
+            <div class="flex flex-col w-1/2 justify-between items-center bg-slate-500 rounded-lg">
+                <div class="w-full flex justify-start pt-4 pl-6">
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Others</p>
+                </div>
+                <div class="flex justify-between items-center">
+                    <VueApexCharts type="radialBar" :options="secChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="pressureChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="luxChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="windChart" :series="seriesData" height="300" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
