@@ -1,14 +1,57 @@
 <script setup>
-    import { ref } from 'vue';
+import { ref } from 'vue';
 
-    const showSignupForm = ref(true);
-    const showOtpForm = ref(false);
+const showSignupForm = ref(true);
+const showOtpForm = ref(false);
 
-    // ฟังก์ชันที่ทำให้แสดงฟอร์ม OTP เมื่อกดปุ่ม Create Account
-    const handleCreateAccount = () => {
+// ตัวเลือกทั้งหมดของทุเรียน
+const durianOptions = [
+    "ก้านยาวทรงหวด", "ก้านยาวสีนาก", "ชมพูพาน", "หมอนทอง", "กำปั่นดำ", "กำปั่นพวง",
+    "กำปั่นเหลือง(เจ้ากรม)", "กำปั่นเดิม(ขาว)", "กำปั่นตาแพ", "ชายมะไฟ", "ดาวกระจาย",
+    "ทองย้อยเดิม", "ทองย้อยฉัตร", "ฉัตรสีทอง", "ฉัตรสีนาก", "นกหยิบ", "อีหนัก", "ทับทิม",
+    "กบก้านสั้น", "กบชายน้ำ", "กบสุวรรณ", "กบจำปา", "กบตาขำ", "กบตาเต่า", "กบตานวล",
+    "กบไว", "กบพิกุล", "กบทองคำ", "กบตามาก", "กบแม่เฒ่า", "กบเล็บเหยี่ยว", "กบวัดกล้วย",
+    "กบสาวน้อย", "กบเจ้าคุณ", "กบหน้าศาล", "กบหลังวิหาร", "กบหัวสิงห์", "กบเหมราช",
+    "กบเหลือง", "กระดุมทอง", "กระดุมสีนาก", "กระปุกทองดี", "กลีบสมุทร", "กะเทยเนื้อขาว",
+    "กะเทยเนื้อเหลือง", "การะเกด", "เจ้าเงาะ", "ชายมังคุด", "ตะพาบน้ำ", "ธรณีไหว",
+    "บางขุนนนท์", "เขียวตำลึง", "เม็ดในยายปราง", "เม็ดในก้านยาว", "สาวชม", "สาวชมฟักทอง",
+    "จอกลอย", "บาตรทองคำ", "ชะนี", "อีลวง", "อีลีบ", "ย่ำมะหวาด", "แดงรัศมี", "ชมพูศรี",
+    "นวลทองจันทร์", "พวงมณี", "ฟักข้าว", "มูซานคิง", "ละอองฟ้า", "ซ่อนกลิ่น", "ทองกมล",
+    "ทองแดง", "ทองลินจง", "ทองลิ้นจี่", "ลำเจียก", "ก้านยาววัดสัก", "จันทบุรี1", "จันทบุรี2",
+    "จันทบุรี3", "จันทบุรี5", "หลงลับแล", "หลินลับแล"
+];
+
+// ฟังก์ชันที่ทำให้แสดงฟอร์ม OTP เมื่อกดปุ่ม Create Account
+const handleCreateAccount = (event) => {
+    const form = document.querySelector('form.signup_form');
+    const inputs = form.querySelectorAll('input[required]');
+    const selects = form.querySelectorAll('select[required]');
+
+    // ตรวจสอบว่า input และ select ทั้งหมดที่ require มีการกรอกข้อมูลหรือไม่
+    let allFieldsValid = true;
+
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            allFieldsValid = false;
+        }
+    });
+
+    selects.forEach(select => {
+        if (!select.value || select.value === 'Type1' || select.value === 'Type2' || select.value === 'Type3') {
+            allFieldsValid = false;
+        }
+    });
+
+    if (!allFieldsValid) {
+        event.preventDefault(); // ป้องกันการ submit
+        alert('Please fill out all required fields.');
+        return;
+    }
+
+    // หากข้อมูลครบถ้วน
     showSignupForm.value = false;
     showOtpForm.value = true;
-    };
+};
 </script>
 
 <template>
@@ -31,80 +74,80 @@
                             <!-- First name Input -->
                             <div class="space-y-2">
                                 <label for="firstname" class="block text-sm font-medium text-gray-200">
-                                    First Name
+                                    First Name <span class="text-red-600">*</span>
                                 </label>
                                 <input type="text" id="firstName" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Enter your First Name" />
+                                    placeholder="Enter your First Name" required />
                             </div>
 
                             <!-- Last name Input -->
                             <div class="space-y-2">
                                 <label for="lastname" class="block text-sm font-medium text-gray-200">
-                                    Last Name
+                                    Last Name <span class="text-red-600">*</span>
                                 </label>
                                 <input type="text" id="lastName" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Enter your Last Name" />
+                                    placeholder="Enter your Last Name" required />
                             </div>
                         </div>
 
                         <!-- Email Input -->
                         <div class="space-y-2">
                             <label for="email" class="block text-sm font-medium text-gray-200">
-                                Email
+                                Email <span class="text-red-600">*</span>
                             </label>
                             <input type="email" id="email" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                     text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                     focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                placeholder="Enter your Email" />
+                                placeholder="Enter your Email" required />
                         </div>
 
                         <!-- Password Input -->
                         <div class="space-y-2">
                             <label for="password" class="block text-sm font-medium text-gray-200">
-                                Password
+                                Password <span class="text-red-600">*</span>
                             </label>
                             <input type="password" id="password" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                        focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                placeholder="Enter your password" />
+                                placeholder="Enter your password" required />
                         </div>
 
                         <!--Re Password Input -->
                         <div class="space-y-2">
                             <label for="password" class="block text-sm font-medium text-gray-200">
-                                Confirm Password
+                                Confirm Password <span class="text-red-600">*</span>
                             </label>
                             <input type="password" id="repassword" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                        focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                placeholder="Enter your password" />
+                                placeholder="Enter your password" required />
                         </div>
 
                         <div class="flex space-x-4">
                             <!-- Province Input -->
                             <div class="space-y-2">
                                 <label for="province" class="block text-sm font-medium text-gray-200">
-                                    Province
+                                    Province <span class="text-red-600">*</span>
                                 </label>
                                 <input type="text" id="province" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Enter your Province" />
+                                    placeholder="Enter your Province" required />
                             </div>
 
                             <!-- District Input -->
                             <div class="space-y-2">
                                 <label for="district" class="block text-sm font-medium text-gray-200">
-                                    District
+                                    District <span class="text-red-600">*</span>
                                 </label>
                                 <input type="text" id="district" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Enter your District" />
+                                    placeholder="Enter your District" required />
                             </div>                        
                         </div>
 
@@ -112,23 +155,23 @@
                             <!-- Sub district Input -->
                             <div class="space-y-2">
                                 <label for="subdistrict" class="block text-sm font-medium text-gray-200">
-                                    Subdistrict
+                                    Subdistrict <span class="text-red-600">*</span>
                                 </label>
                                 <input type="text" id="subdistrict" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Enter your Subdistrict" />
+                                    placeholder="Enter your Subdistrict" required />
                             </div>
 
                             <!-- Posy code Input -->
                             <div class="space-y-2">
                                 <label for="postcode" class="block text-sm font-medium text-gray-200">
-                                    Post code
+                                    Post code <span class="text-red-600">*</span>
                                 </label>
                                 <input type="text" id="postcode" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Enter your Post code" />
+                                    placeholder="Enter your Post code" required />
                             </div>                        
                         </div>
 
@@ -169,15 +212,16 @@
 
                         <!-- type durian -->
                         <div class="flex space-x-4">
+
                             <!-- Type Durian1 Input -->
                             <div class="space-y-2">
                                 <label for="type_durian1" class="block text-sm font-medium text-gray-200">
-                                    Type Durian 1
+                                    Type Durian 1 <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="type_durian1" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
-                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                        focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Type Durian 1" />
+                                <select v-model="typeDurian1" id="input_typedurian1" required class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                    <option disabled selected>Type1</option>
+                                    <option v-for="option in durianOptions" :key="option" :value="option">{{ option }}</option>
+                                </select>
                             </div>
 
                             <!-- Type Durian2 Input -->
@@ -185,26 +229,26 @@
                                 <label for="type_durian2" class="block text-sm font-medium text-gray-200">
                                     Type Durian 2
                                 </label>
-                                <input type="text" id="type_durian2" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
-                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                        focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Type Durian 2" />
-                            </div>  
+                                <select v-model="typeDurian2" id="input_typedurian2" required class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                    <option disabled selected>Type2</option>
+                                    <option v-for="option in durianOptions" :key="option" :value="option">{{ option }}</option>
+                                </select>
+                            </div>
 
                             <!-- Type Durian3 Input -->
                             <div class="space-y-2">
                                 <label for="type_durian3" class="block text-sm font-medium text-gray-200">
                                     Type Durian 3
                                 </label>
-                                <input type="text" id="type_durian3" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
-                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                        focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                    placeholder="Type Durian 3" />
-                            </div> 
+                                <select v-model="typeDurian3" id="input_typedurian3" required class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                    <option disabled selected>Type3</option>
+                                    <option v-for="option in durianOptions" :key="option" :value="option">{{ option }}</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Login Button -->
-                        <button type="submit" id="create_account" @click="handleCreateAccount" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white 
+                        <button type="submit" id="create_account" @click.prevent="handleCreateAccount" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white 
                      font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 
                      focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 
                      transition duration-200">

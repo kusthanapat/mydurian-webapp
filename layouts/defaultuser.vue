@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="hidden md:flex space-x-4">
-                        <NuxtLink to="/index"
+                        <NuxtLink to="/"
                             class="px-6 py-2 text-gray-300 hover:text-white border border-transparent hover:border-lime-400 rounded-lg transition-all font-kanit">
                             Logout
                         </NuxtLink>

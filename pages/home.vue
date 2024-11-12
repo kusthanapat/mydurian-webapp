@@ -14,7 +14,7 @@
         <!-- top show -->
         <div class="flex justify-between items-center mt-20">
             <!-- user -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 justify-center items-center rounded-lg">
+            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath1" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="user_text" class="text-white text-xl">user</p>
@@ -22,7 +22,7 @@
             </div>
 
             <!-- pole -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 justify-center items-center rounded-lg">
+            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath2" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="pole_text" class="text-white text-xl">pole</p>
@@ -30,7 +30,7 @@
             </div>
 
             <!-- warning -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 justify-center items-center rounded-lg">
+            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath3" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="warning_text" class="text-white text-xl">warning</p>
@@ -38,7 +38,7 @@
             </div>
 
             <!-- error -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 justify-center items-center rounded-lg">
+            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath4" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="error_text" class="text-white text-xl">error</p>
