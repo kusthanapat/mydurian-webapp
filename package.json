@@ -10,9 +10,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@nuxt/ui": "^2.19.2",
     "apexcharts": "^4.0.0",
     "boxicons": "^2.1.4",
+    "firebase": "^11.0.1",
     "nuxt": "^3.14.159",
     "vue": "latest",
     "vue-router": "latest",

@@ -1,57 +1,139 @@
 <script setup>
-import { ref } from 'vue';
+    import { ref } from 'vue';
+    import { initializeApp } from "firebase/app";
+    import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+    import { getFirestore, setDoc, doc } from "firebase/firestore";
+    import emailjs from '@emailjs/browser';
 
-const showSignupForm = ref(true);
-const showOtpForm = ref(false);
+    // Initialize Firebase
+    const firebaseConfig = {
+    apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+    authDomain: "checklogin-67a92.firebaseapp.com",
+    projectId: "checklogin-67a92",
+    storageBucket: "checklogin-67a92.appspot.com",
+    messagingSenderId: "246538906966",
+    appId: "1:246538906966:web:2e4399caaa96210df23af7",
+    measurementId: "G-X3068LRCWT"
+    };
 
-// ตัวเลือกทั้งหมดของทุเรียน
-const durianOptions = [
-    "ก้านยาวทรงหวด", "ก้านยาวสีนาก", "ชมพูพาน", "หมอนทอง", "กำปั่นดำ", "กำปั่นพวง",
-    "กำปั่นเหลือง(เจ้ากรม)", "กำปั่นเดิม(ขาว)", "กำปั่นตาแพ", "ชายมะไฟ", "ดาวกระจาย",
-    "ทองย้อยเดิม", "ทองย้อยฉัตร", "ฉัตรสีทอง", "ฉัตรสีนาก", "นกหยิบ", "อีหนัก", "ทับทิม",
-    "กบก้านสั้น", "กบชายน้ำ", "กบสุวรรณ", "กบจำปา", "กบตาขำ", "กบตาเต่า", "กบตานวล",
-    "กบไว", "กบพิกุล", "กบทองคำ", "กบตามาก", "กบแม่เฒ่า", "กบเล็บเหยี่ยว", "กบวัดกล้วย",
-    "กบสาวน้อย", "กบเจ้าคุณ", "กบหน้าศาล", "กบหลังวิหาร", "กบหัวสิงห์", "กบเหมราช",
-    "กบเหลือง", "กระดุมทอง", "กระดุมสีนาก", "กระปุกทองดี", "กลีบสมุทร", "กะเทยเนื้อขาว",
-    "กะเทยเนื้อเหลือง", "การะเกด", "เจ้าเงาะ", "ชายมังคุด", "ตะพาบน้ำ", "ธรณีไหว",
-    "บางขุนนนท์", "เขียวตำลึง", "เม็ดในยายปราง", "เม็ดในก้านยาว", "สาวชม", "สาวชมฟักทอง",
-    "จอกลอย", "บาตรทองคำ", "ชะนี", "อีลวง", "อีลีบ", "ย่ำมะหวาด", "แดงรัศมี", "ชมพูศรี",
-    "นวลทองจันทร์", "พวงมณี", "ฟักข้าว", "มูซานคิง", "ละอองฟ้า", "ซ่อนกลิ่น", "ทองกมล",
-    "ทองแดง", "ทองลินจง", "ทองลิ้นจี่", "ลำเจียก", "ก้านยาววัดสัก", "จันทบุรี1", "จันทบุรี2",
-    "จันทบุรี3", "จันทบุรี5", "หลงลับแล", "หลินลับแล"
-];
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore(app);
 
-// ฟังก์ชันที่ทำให้แสดงฟอร์ม OTP เมื่อกดปุ่ม Create Account
-const handleCreateAccount = (event) => {
-    const form = document.querySelector('form.signup_form');
-    const inputs = form.querySelectorAll('input[required]');
-    const selects = form.querySelectorAll('select[required]');
+    emailjs.init('LEGDxzoAXq2t4E9a7');
 
-    // ตรวจสอบว่า input และ select ทั้งหมดที่ require มีการกรอกข้อมูลหรือไม่
-    let allFieldsValid = true;
+    const showSignupForm = ref(true);
+    const showOtpForm = ref(false);
+    const generatedOTP = ref('');
 
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            allFieldsValid = false;
+    // ตัวเลือกทั้งหมดของทุเรียน
+    const durianOptions = [
+        "ก้านยาวทรงหวด", "ก้านยาวสีนาก", "ชมพูพาน", "หมอนทอง", "กำปั่นดำ", "กำปั่นพวง",
+        "กำปั่นเหลือง(เจ้ากรม)", "กำปั่นเดิม(ขาว)", "กำปั่นตาแพ", "ชายมะไฟ", "ดาวกระจาย",
+        "ทองย้อยเดิม", "ทองย้อยฉัตร", "ฉัตรสีทอง", "ฉัตรสีนาก", "นกหยิบ", "อีหนัก", "ทับทิม",
+        "กบก้านสั้น", "กบชายน้ำ", "กบสุวรรณ", "กบจำปา", "กบตาขำ", "กบตาเต่า", "กบตานวล",
+        "กบไว", "กบพิกุล", "กบทองคำ", "กบตามาก", "กบแม่เฒ่า", "กบเล็บเหยี่ยว", "กบวัดกล้วย",
+        "กบสาวน้อย", "กบเจ้าคุณ", "กบหน้าศาล", "กบหลังวิหาร", "กบหัวสิงห์", "กบเหมราช",
+        "กบเหลือง", "กระดุมทอง", "กระดุมสีนาก", "กระปุกทองดี", "กลีบสมุทร", "กะเทยเนื้อขาว",
+        "กะเทยเนื้อเหลือง", "การะเกด", "เจ้าเงาะ", "ชายมังคุด", "ตะพาบน้ำ", "ธรณีไหว",
+        "บางขุนนนท์", "เขียวตำลึง", "เม็ดในยายปราง", "เม็ดในก้านยาว", "สาวชม", "สาวชมฟักทอง",
+        "จอกลอย", "บาตรทองคำ", "ชะนี", "อีลวง", "อีลีบ", "ย่ำมะหวาด", "แดงรัศมี", "ชมพูศรี",
+        "นวลทองจันทร์", "พวงมณี", "ฟักข้าว", "มูซานคิง", "ละอองฟ้า", "ซ่อนกลิ่น", "ทองกมล",
+        "ทองแดง", "ทองลินจง", "ทองลิ้นจี่", "ลำเจียก", "ก้านยาววัดสัก", "จันทบุรี1", "จันทบุรี2",
+        "จันทบุรี3", "จันทบุรี5", "หลงลับแล", "หลินลับแล"
+    ];
+
+    // ฟังก์ชันส่ง OTP
+    const sendOTP = async (email, firstName) => {
+        generatedOTP.value = Math.floor(1000 + Math.random() * 9000).toString(); // สร้าง OTP 4 หลัก
+        const params = {
+            name: firstName,
+            to_email: email,
+            message: generatedOTP.value
+        };
+
+        try {
+            await emailjs.send("service_s58b949", "template_8kqzp82", params);
+            alert(`OTP ถูกส่งไปที่ ${email}`);
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            alert("เกิดข้อผิดพลาดในการส่ง OTP: " + error.message);
         }
-    });
+    };
 
-    selects.forEach(select => {
-        if (!select.value || select.value === 'Type1' || select.value === 'Type2' || select.value === 'Type3') {
+    // ฟังก์ชันที่ทำให้แสดงฟอร์ม OTP เมื่อกดปุ่ม Create Account และส่ง OTP
+    const handleCreateAccount = async (event) => {
+        const form = document.querySelector('form.signup_form');
+        const inputs = form.querySelectorAll('input[required]');
+        const selects = form.querySelectorAll('select[required]');
+
+        let allFieldsValid = true;
+
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
             allFieldsValid = false;
+            }
+        });
+
+        selects.forEach(select => {
+            if (!select.value || select.value === 'Type1' || select.value === 'Type2' || select.value === 'Type3') {
+            allFieldsValid = false;
+            }
+        });
+
+        if (!allFieldsValid) {
+            event.preventDefault();
+            alert('กรุณากรอกข้อมูลในช่องที่จำเป็นให้ครบถ้วน');
+            return;
         }
-    });
 
-    if (!allFieldsValid) {
-        event.preventDefault(); // ป้องกันการ submit
-        alert('Please fill out all required fields.');
-        return;
-    }
+        const email = document.getElementById('email').value;
+        const firstName = document.getElementById('firstName').value;
+        await sendOTP(email, firstName);
 
-    // หากข้อมูลครบถ้วน
-    showSignupForm.value = false;
-    showOtpForm.value = true;
-};
+        showSignupForm.value = false;
+        showOtpForm.value = true;
+    };
+
+    // ฟังก์ชันตรวจสอบ OTP และบันทึกข้อมูลลง Firestore
+    const handleVerifyOTP = async () => {
+        const enteredOTP = document.getElementById('verifyOTP').value;
+
+        if (enteredOTP === generatedOTP.value) {
+            try {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const province = document.getElementById('province').value;
+                const district = document.getElementById('district').value;
+                const subdistrict = document.getElementById('subdistrict').value;
+                const postcode = document.getElementById('postcode').value;
+
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                await setDoc(doc(db, "users", user.uid), {
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    province: province,
+                    district: district,
+                    subdistrict: subdistrict,
+                    postcode: postcode,
+                    createdAt: new Date()
+                });
+
+                alert("บันทึกข้อมูลเรียบร้อย");
+                window.location.href = "/login"; // เปลี่ยนไปยังหน้า login
+            } catch (error) {
+                console.error("Error signing up or saving data:", error);
+                alert("Error: " + error.message);
+            }
+        } else {
+            alert("OTP ไม่ถูกต้อง กรุณาลองใหม่");
+        }
+    };
 </script>
 
 <template>
@@ -247,12 +329,12 @@ const handleCreateAccount = (event) => {
                             </div>
                         </div>
 
-                        <!-- Login Button -->
+                        <!-- Create Account Button -->
                         <button type="submit" id="create_account" @click.prevent="handleCreateAccount" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white 
-                     font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 
-                     focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 
-                     transition duration-200">
-                            Create Account
+                        font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 
+                        focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 
+                        transition duration-200">
+                        Create Account
                         </button>
                     </form>
 
@@ -273,7 +355,7 @@ const handleCreateAccount = (event) => {
 
                         <!-- verify OTP Button -->
                         <NuxtLink to="/login" class="w-full">
-                            <button type="button" id="verify_otp" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 transition duration-200">
+                            <button type="button" id="verify_otp" @click="handleVerifyOTP" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 transition duration-200">
                                 Verify OTP
                             </button>
                         </NuxtLink>
