@@ -7,19 +7,17 @@
 
     // Initialize Firebase
     const firebaseConfig = {
-    apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
-    authDomain: "checklogin-67a92.firebaseapp.com",
-    projectId: "checklogin-67a92",
-    storageBucket: "checklogin-67a92.appspot.com",
-    messagingSenderId: "246538906966",
-    appId: "1:246538906966:web:2e4399caaa96210df23af7",
-    measurementId: "G-X3068LRCWT"
+        apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+        authDomain: "checklogin-67a92.firebaseapp.com",
+        projectId: "checklogin-67a92",
+        storageBucket: "checklogin-67a92.appspot.com",
+        messagingSenderId: "246538906966",
+        appId: "1:246538906966:web:2e4399caaa96210df23af7",
+        measurementId: "G-X3068LRCWT"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore(app);
-
     emailjs.init('LEGDxzoAXq2t4E9a7');
 
     const showSignupForm = ref(true);
@@ -43,18 +41,35 @@
         "จันทบุรี3", "จันทบุรี5", "หลงลับแล", "หลินลับแล"
     ];
 
+    // Refs สำหรับ input ต่างๆ
+    const email = ref('');
+    const firstName = ref('');
+    const lastName = ref('');
+    const password = ref('');
+    const province = ref('');
+    const district = ref('');
+    const subdistrict = ref('');
+    const postcode = ref('');
+    const area = ref('');
+    const tree = ref('');
+    const inputMapValue = ref('');
+    const typeDurian1 = ref('');
+    const typeDurian2 = ref('');
+    const typeDurian3 = ref('');
+    const enteredOTP = ref('');
+
     // ฟังก์ชันส่ง OTP
-    const sendOTP = async (email, firstName) => {
+    const sendOTP = async () => {
         generatedOTP.value = Math.floor(1000 + Math.random() * 9000).toString(); // สร้าง OTP 4 หลัก
         const params = {
-            name: firstName,
-            to_email: email,
+            name: firstName.value,
+            to_email: email.value,
             message: generatedOTP.value
         };
 
         try {
             await emailjs.send("service_s58b949", "template_8kqzp82", params);
-            alert(`OTP ถูกส่งไปที่ ${email}`);
+            alert(`OTP ถูกส่งไปที่ ${email.value}`);
         } catch (error) {
             console.error("Error sending OTP:", error);
             alert("เกิดข้อผิดพลาดในการส่ง OTP: " + error.message);
@@ -63,64 +78,43 @@
 
     // ฟังก์ชันที่ทำให้แสดงฟอร์ม OTP เมื่อกดปุ่ม Create Account และส่ง OTP
     const handleCreateAccount = async (event) => {
-        const form = document.querySelector('form.signup_form');
-        const inputs = form.querySelectorAll('input[required]');
-        const selects = form.querySelectorAll('select[required]');
+        event.preventDefault();
 
-        let allFieldsValid = true;
-
-        inputs.forEach(input => {
-            if (!input.value.trim()) {
-            allFieldsValid = false;
-            }
-        });
-
-        selects.forEach(select => {
-            if (!select.value || select.value === 'Type1' || select.value === 'Type2' || select.value === 'Type3') {
-            allFieldsValid = false;
-            }
-        });
-
-        if (!allFieldsValid) {
-            event.preventDefault();
+        if (!firstName.value || !email.value) {
             alert('กรุณากรอกข้อมูลในช่องที่จำเป็นให้ครบถ้วน');
             return;
         }
 
-        const email = document.getElementById('email').value;
-        const firstName = document.getElementById('firstName').value;
-        await sendOTP(email, firstName);
-
+        await sendOTP();
         showSignupForm.value = false;
         showOtpForm.value = true;
     };
 
     // ฟังก์ชันตรวจสอบ OTP และบันทึกข้อมูลลง Firestore
     const handleVerifyOTP = async () => {
-        const enteredOTP = document.getElementById('verifyOTP').value;
-
-        if (enteredOTP === generatedOTP.value) {
+        if (enteredOTP.value === generatedOTP.value) {
             try {
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const firstName = document.getElementById('firstName').value;
-                const lastName = document.getElementById('lastName').value;
-                const province = document.getElementById('province').value;
-                const district = document.getElementById('district').value;
-                const subdistrict = document.getElementById('subdistrict').value;
-                const postcode = document.getElementById('postcode').value;
-
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
                 const user = userCredential.user;
 
                 await setDoc(doc(db, "users", user.uid), {
-                    email: email,
-                    firstName: firstName,
-                    lastName: lastName,
-                    province: province,
-                    district: district,
-                    subdistrict: subdistrict,
-                    postcode: postcode,
+                    placeNo: '',
+                    placeName: '',
+                    uid: user.uid,
+                    googleSheet: '',
+                    email: email.value,
+                    firstName: firstName.value,
+                    lastName: lastName.value,
+                    province: province.value,
+                    district: district.value,
+                    subdistrict: subdistrict.value,
+                    postcode: postcode.value,
+                    area: area.value,
+                    tree: tree.value,
+                    map: inputMapValue.value,
+                    type_durian1: typeDurian1.value,
+                    type_durian2: typeDurian2.value,
+                    type_durian3: typeDurian3.value,
                     createdAt: new Date()
                 });
 
@@ -151,14 +145,14 @@
                     </div>
 
                     <!-- Sign up Form -->
-                    <form v-if="showSignupForm" class="signup_form space-y-6">
+                    <form v-if="showSignupForm" @submit.prevent="handleCreateAccount" class="signup_form space-y-6">
                         <div class="flex space-x-4">
                             <!-- First name Input -->
                             <div class="space-y-2">
                                 <label for="firstname" class="block text-sm font-medium text-gray-200">
                                     First Name <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="firstName" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="firstName" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Enter your First Name" required />
@@ -169,7 +163,7 @@
                                 <label for="lastname" class="block text-sm font-medium text-gray-200">
                                     Last Name <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="lastName" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="lastName" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Enter your Last Name" required />
@@ -181,7 +175,7 @@
                             <label for="email" class="block text-sm font-medium text-gray-200">
                                 Email <span class="text-red-600">*</span>
                             </label>
-                            <input type="email" id="email" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="email" v-model="email" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                     text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                     focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your Email" required />
@@ -192,7 +186,7 @@
                             <label for="password" class="block text-sm font-medium text-gray-200">
                                 Password <span class="text-red-600">*</span>
                             </label>
-                            <input type="password" id="password" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="password" v-model="password" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                        focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your password" required />
@@ -203,7 +197,7 @@
                             <label for="password" class="block text-sm font-medium text-gray-200">
                                 Confirm Password <span class="text-red-600">*</span>
                             </label>
-                            <input type="password" id="repassword" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="password" v-model="repassword" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                        focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your password" required />
@@ -215,7 +209,7 @@
                                 <label for="province" class="block text-sm font-medium text-gray-200">
                                     Province <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="province" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="province" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Enter your Province" required />
@@ -226,7 +220,7 @@
                                 <label for="district" class="block text-sm font-medium text-gray-200">
                                     District <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="district" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="district" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Enter your District" required />
@@ -239,7 +233,7 @@
                                 <label for="subdistrict" class="block text-sm font-medium text-gray-200">
                                     Subdistrict <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="subdistrict" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="subdistrict" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Enter your Subdistrict" required />
@@ -250,7 +244,7 @@
                                 <label for="postcode" class="block text-sm font-medium text-gray-200">
                                     Post code <span class="text-red-600">*</span>
                                 </label>
-                                <input type="text" id="postcode" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="postcode" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Enter your Post code" required />
@@ -263,7 +257,7 @@
                                 <label for="area" class="block text-sm font-medium text-gray-200">
                                     Amount of Area
                                 </label>
-                                <input type="text" id="area" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="area" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Amount of Area" />
@@ -274,7 +268,7 @@
                                 <label for="tree" class="block text-sm font-medium text-gray-200">
                                     Amount of Tree
                                 </label>
-                                <input type="text" id="tree" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                                <input type="text" v-model="tree" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                         text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:border-transparent transition duration-200"
                                     placeholder="Amount of Tree" />
@@ -286,7 +280,7 @@
                             <label for="iframe" class="block text-sm font-medium text-gray-200">
                                 Iframe of Googlemap
                             </label>
-                            <input type="text" id="iframe" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="text" v-model="iframe" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                     text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                     focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your Iframe" />
@@ -300,7 +294,7 @@
                                 <label for="type_durian1" class="block text-sm font-medium text-gray-200">
                                     Type Durian 1 <span class="text-red-600">*</span>
                                 </label>
-                                <select v-model="typeDurian1" id="input_typedurian1" required class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                <select v-model="typeDurian1" class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20">
                                     <option disabled selected>Type1</option>
                                     <option v-for="option in durianOptions" :key="option" :value="option">{{ option }}</option>
                                 </select>
@@ -311,7 +305,7 @@
                                 <label for="type_durian2" class="block text-sm font-medium text-gray-200">
                                     Type Durian 2
                                 </label>
-                                <select v-model="typeDurian2" id="input_typedurian2" required class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                <select v-model="typeDurian2" class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20">
                                     <option disabled selected>Type2</option>
                                     <option v-for="option in durianOptions" :key="option" :value="option">{{ option }}</option>
                                 </select>
@@ -322,7 +316,7 @@
                                 <label for="type_durian3" class="block text-sm font-medium text-gray-200">
                                     Type Durian 3
                                 </label>
-                                <select v-model="typeDurian3" id="input_typedurian3" required class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                <select v-model="typeDurian3" class="w-full px-4 py-3 rounded-lg bg-white/10 text-gray-500 border border-gray-300/20">
                                     <option disabled selected>Type3</option>
                                     <option v-for="option in durianOptions" :key="option" :value="option">{{ option }}</option>
                                 </select>
@@ -330,7 +324,7 @@
                         </div>
 
                         <!-- Create Account Button -->
-                        <button type="submit" id="create_account" @click.prevent="handleCreateAccount" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white 
+                        <button type="submit" id="create_account" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white 
                         font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 
                         focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 
                         transition duration-200">
@@ -339,13 +333,13 @@
                     </form>
 
                     <!-- Verify OTP -->
-                    <form v-if="showOtpForm" class="otp_form space-y-6">
+                    <form v-if="showOtpForm" @submit.prevent="handleVerifyOTP" class="otp_form space-y-6">
                         <!-- OTP Input -->
                         <div class="space-y-2 mb-6">
                             <label for="verifyOTP" class="block text-sm font-medium text-gray-200">
                                 Verify OTP!
                             </label>
-                            <input type="text" id="verifyOTP" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="text" v-model="enteredOTP"class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                     text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                     focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your OTP" />
@@ -355,7 +349,7 @@
 
                         <!-- verify OTP Button -->
                         <NuxtLink to="/login" class="w-full">
-                            <button type="button" id="verify_otp" @click="handleVerifyOTP" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 transition duration-200">
+                            <button type="submit" id="verify_otp" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 transition duration-200">
                                 Verify OTP
                             </button>
                         </NuxtLink>

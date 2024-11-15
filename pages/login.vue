@@ -1,5 +1,43 @@
 <script setup>
-import iconPath from '~/assets/images/icon_durian.png';
+    import iconPath from '~/assets/images/icon_durian.png';
+    import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
+    import { initializeApp } from "firebase/app";
+    import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+        authDomain: "checklogin-67a92.firebaseapp.com",
+        projectId: "checklogin-67a92",
+        storageBucket: "checklogin-67a92.appspot.com",
+        messagingSenderId: "246538906966",
+        appId: "1:246538906966:web:2e4399caaa96210df23af7",
+        measurementId: "G-X3068LRCWT"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    // Variables
+    const username = ref('');
+    const password = ref('');
+    const router = useRouter();
+
+    // Function for login
+    const handleLogin = async (event) => {
+        event.preventDefault();
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value);
+            // Redirect to home page on successful login
+            router.push('/home');
+        } catch (error) {
+            console.error('Error signing in:', error);
+            alert('Login failed: ' + error.message);
+        }
+    };
 </script>
 
 <template>
@@ -18,13 +56,13 @@ import iconPath from '~/assets/images/icon_durian.png';
                     </div>
 
                     <!-- Login Form -->
-                    <form class="space-y-6">
+                    <form @submit.prevent="handleLogin" class="space-y-6">
                         <!-- Username Input -->
                         <div class="space-y-2">
                             <label for="username" class="block text-sm font-medium text-gray-200">
                                 Username
                             </label>
-                            <input type="text" id="username" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="text" v-model="username" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                        focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your username" />
@@ -35,7 +73,7 @@ import iconPath from '~/assets/images/icon_durian.png';
                             <label for="password" class="block text-sm font-medium text-gray-200">
                                 Password
                             </label>
-                            <input type="password" id="password" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
+                            <input type="password" v-model="password" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-gray-300/20 
                        text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                        focus:ring-purple-500 focus:border-transparent transition duration-200"
                                 placeholder="Enter your password" />
@@ -57,11 +95,11 @@ import iconPath from '~/assets/images/icon_durian.png';
 
                         <!-- Login Button -->
                         <button type="submit" class="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white 
-                     font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 
-                     focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 
-                     transition duration-200">
-                            Sign in
-                        </button>
+                        font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 
+                        focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-purple-200 
+                        transition duration-200">
+                        Sign in
+                        </button>                        
                     </form>
 
                     <!-- Sign Up Link -->
