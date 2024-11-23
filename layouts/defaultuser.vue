@@ -30,7 +30,7 @@
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/database/database" 
+                            to="/users/database" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Database
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
