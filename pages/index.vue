@@ -1,3 +1,25 @@
+<script setup>
+  import { ref, onMounted, onUnmounted } from 'vue';
+
+  // Import images
+  import iconPath from '~/assets/images/icon_durian.png';
+  import iconPath8 from '~/assets/images/smart_pic_use3.png';
+
+  const currentSlide = ref(0);
+  const totalSlides = 2;
+
+  const changeSlide = () => {
+    currentSlide.value = (currentSlide.value + 1) % totalSlides;
+  };
+
+  onMounted(() => {
+    const interval = setInterval(changeSlide, 5000);
+    onUnmounted(() => {
+      clearInterval(interval);
+    });
+  });
+  
+</script>
 <template>
   <!-- Hero Section -->
   <div class="relative">
@@ -123,28 +145,6 @@
     </div>
   </section>
 </template>
-
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-
-// Import images
-import iconPath from '~/assets/images/icon_durian.png';
-import iconPath8 from '~/assets/images/smart_pic_use3.png';
-
-const currentSlide = ref(0);
-const totalSlides = 2;
-
-const changeSlide = () => {
-  currentSlide.value = (currentSlide.value + 1) % totalSlides;
-};
-
-onMounted(() => {
-  const interval = setInterval(changeSlide, 5000);
-  onUnmounted(() => {
-    clearInterval(interval);
-  });
-});
-</script>
 
 <style>
 /* Transition animations */

@@ -12,25 +12,25 @@
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-8">
                         <NuxtLink 
-                            to="/home" 
+                            to="/users/home" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Home
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/dashboard" 
+                            to="/users/dashboard" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Dashboard
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/chart" 
+                            to="/users/chart" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Chart
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/database" 
+                            to="/database/database" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Database
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
