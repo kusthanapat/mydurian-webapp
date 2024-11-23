@@ -226,8 +226,7 @@
                         let date = new Date(row.TimeStamp);
                         return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
                     });
-
-                    // อัปเดตเพื่อให้ Vue รู้ว่ามีการเปลี่ยนแปลง
+                    
                     chartOptions.value = { ...chartOptions.value };
                 }
             }
