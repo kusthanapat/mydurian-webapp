@@ -1,9 +1,92 @@
 <script setup>
+    import { useRoute } from 'vue-router';
+    import { ref, onMounted } from 'vue';
     import VueApexCharts from 'vue3-apexcharts'
-    import { ref, onMounted } from 'vue'
+    import { initializeApp } from 'firebase/app';
+    import { getFirestore, doc, getDoc } from 'firebase/firestore';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+        authDomain: "checklogin-67a92.firebaseapp.com",
+        projectId: "checklogin-67a92",
+        storageBucket: "checklogin-67a92.appspot.com",
+        messagingSenderId: "246538906966",
+        appId: "1:246538906966:web:2e4399caaa96210df23af7",
+        measurementId: "G-X3068LRCWT"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const route = useRoute();
+    const uid = route.query.uid;
+
+    console.log('User UID:', uid);
+    
     definePageMeta({
         layout: "defaultuser"
     })
+
+    console.log('User UID:', uid);
+
+    // ตัวแปรสำหรับเก็บข้อมูลซีรีส์ของกราฟ
+    const seriesData = ref([]);
+    const googleSheetURL = ref('');
+
+    async function fetchGoogleSheetURL() {
+        try {
+            const docRef = doc(db, 'users', uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                googleSheetURL.value = docSnap.data().googleSheet;
+                console.log('Google Sheet URL:', googleSheetURL.value);
+                fetchDataAndCreateCharts(); // เรียกฟังก์ชันดึงข้อมูลหลังจากได้ URL
+            } else {
+                console.log('No such document!');
+            }
+        } catch (error) {
+            console.error('Error fetching document:', error);
+        }
+    }
+
+    // ฟังก์ชันดึงข้อมูลจาก Google Sheets
+    function fetchDataAndCreateCharts() {
+        if (!googleSheetURL.value) {
+            console.error('Google Sheet URL is not set');
+            return;
+        }
+
+        fetch(googleSheetURL.value)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    const latestRow = data[data.length - 1]; // ดึงแถวล่าสุด
+
+                    // กำหนดค่าในแต่ละกราฟ
+                    seriesData.value = [
+                        parseFloat(latestRow.Temperature) || 0,
+                        parseFloat(latestRow.Humidity) || 0,
+                        parseFloat(latestRow.Lux) || 0,
+                        parseFloat(latestRow.Pressure) || 0,
+                        parseFloat(latestRow.ST) || 0,
+                        parseFloat(latestRow.SH) || 0,
+                        parseFloat(latestRow.SPH) || 0,
+                        parseFloat(latestRow.SEC) || 0,
+                        parseFloat(latestRow.SN) || 0,
+                        parseFloat(latestRow.SP) || 0,
+                        parseFloat(latestRow.SK) || 0,
+                        parseFloat(latestRow.Wind) || 0
+                    ];
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    // เรียกใช้ฟังก์ชันเมื่อหน้าโหลด
+    onMounted(() => {
+        fetchGoogleSheetURL();
+    });
 
     // temp chart
     const tempChart = ref({
@@ -25,7 +108,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 100;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -54,7 +141,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 100;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -83,7 +174,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 1000;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -112,7 +207,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 10000;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -141,7 +240,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 100;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -170,7 +273,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 100;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -199,7 +306,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 14;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -228,7 +339,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 20000;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -257,7 +372,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 1999;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -286,7 +405,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 1999;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -315,7 +438,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 1999;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -344,7 +471,11 @@
                         show: true,
                         fontSize: '16px',
                         formatter: function (val) {
-                            return `${val}%`
+                            // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
+                            let min = 0;
+                            let max = 100;
+                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -352,8 +483,6 @@
         },
         labels: ['Wind'],
     })
-
-    const seriesData = ref([67]) // เปลี่ยนข้อมูลเป็นเปอร์เซ็นต์หรือค่าที่ต้องการแสดง
 </script>
 
 <template>
@@ -364,8 +493,8 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
                 </div>
                 <div class="flex justify-between items-center">
-                    <VueApexCharts type="radialBar" :options="tempChart" :series="seriesData" height="350" />
-                    <VueApexCharts type="radialBar" :options="stChart" :series="seriesData" height="350" />
+                    <VueApexCharts type="radialBar" :options="tempChart" :series="[seriesData[0]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="stChart" :series="[seriesData[4]]" height="350" />
                 </div>
             </div>
 
@@ -374,8 +503,8 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Humidity</p>
                 </div>
                 <div class="flex justify-between items-center">
-                    <VueApexCharts type="radialBar" :options="humiChart" :series="seriesData" height="350" />
-                    <VueApexCharts type="radialBar" :options="shChart" :series="seriesData" height="350" />
+                    <VueApexCharts type="radialBar" :options="humiChart" :series="[seriesData[1]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="shChart" :series="[seriesData[5]]" height="350" />
                 </div>
             </div>
         </div>
@@ -385,10 +514,10 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Soil</p>
                 </div>
                 <div class="flex justify-between items-center">
-                    <VueApexCharts type="radialBar" :options="sphChart" :series="seriesData" height="300" />
-                    <VueApexCharts type="radialBar" :options="snChart" :series="seriesData" height="300" />
-                    <VueApexCharts type="radialBar" :options="spChart" :series="seriesData" height="300" />
-                    <VueApexCharts type="radialBar" :options="skChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="sphChart" :series="[seriesData[6]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="snChart" :series="[seriesData[8]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="spChart" :series="[seriesData[9]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="skChart" :series="[seriesData[10]]" height="300" />
                 </div>
         </div>
 
@@ -397,10 +526,10 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Others</p>
                 </div>
                 <div class="flex justify-between items-center">
-                    <VueApexCharts type="radialBar" :options="secChart" :series="seriesData" height="300" />
-                    <VueApexCharts type="radialBar" :options="pressureChart" :series="seriesData" height="300" />
-                    <VueApexCharts type="radialBar" :options="luxChart" :series="seriesData" height="300" />
-                    <VueApexCharts type="radialBar" :options="windChart" :series="seriesData" height="300" />
+                    <VueApexCharts type="radialBar" :options="secChart" :series="[seriesData[7]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="pressureChart" :series="[seriesData[3]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="luxChart" :series="[seriesData[2]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="windChart" :series="[seriesData[11]]" height="300" />
                 </div>
         </div>
     </div>

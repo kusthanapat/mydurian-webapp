@@ -3,9 +3,29 @@
     import iconPath2 from '~/assets/images/electric-pole.png';
     import iconPath3 from '~/assets/images/crisis.png';
     import iconPath4 from '~/assets/images/mark.png';
+
     definePageMeta({
         layout: "defaultuser"
     })
+
+    import { useRoute } from 'vue-router';
+
+    // Get the route object
+    const route = useRoute();
+
+    // Extract the UID from the query parameter
+    const uid = route.query.uid;
+
+    // Log the UID to confirm it's received
+    console.log('User UID:', uid);
+
+    // Function to navigate to a page with the user's UID in the query string
+    const navigateTo = (path) => {
+        router.push({ path: path, query: { uid: uid } });
+    };
+
+    // Use the UID to fetch user-specific data or perform any operations needed
+    // เช่น การดึงข้อมูลผู้ใช้จาก Firebase Firestore
 </script>
 
 <template>

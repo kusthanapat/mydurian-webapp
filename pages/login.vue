@@ -31,13 +31,36 @@
 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value);
-            // Redirect to home page on successful login
-            router.push('/home');
+            const user = userCredential.user;
+
+            // Check if the logged-in user's UID matches the specific UID for admin
+            if (user.uid === '46LyYu28VCOHW2UvCspi2aDbpZC3') {
+                // Redirect to the admin page
+                router.push('admins/admin');
+            } else {
+                // Redirect to the home page with the user's UID as a query parameter
+                router.push({ path: 'users/home', query: { uid: user.uid } });
+            }
         } catch (error) {
             console.error('Error signing in:', error);
             alert('Login failed: ' + error.message);
         }
     };
+
+    // const handleLogin = async (event) => {
+    //     event.preventDefault();
+
+    //     try {
+    //         const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value);
+    //         const user = userCredential.user;
+
+    //         // Redirect to the home page with the user's UID as a query parameter
+    //         router.push({ path: 'users/home', query: { uid: user.uid } });
+    //     } catch (error) {
+    //         console.error('Error signing in:', error);
+    //         alert('Login failed: ' + error.message);
+    //     }
+    // };
 </script>
 
 <template>

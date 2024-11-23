@@ -11,7 +11,7 @@
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-8">
-                        <NuxtLink v-for="link in ['Home', 'Dashboard', 'Chart', 'Database']" :key="link" :to="`/users/${link.toLowerCase()}?uid=${$route.query.uid}`"
+                        <NuxtLink v-for="link in ['Home', 'AdminData', 'UserData', 'Setting']" :key="link" :to="`/users/${link.toLowerCase()}?uid=${$route.query.uid}`"
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             {{ link }}
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
