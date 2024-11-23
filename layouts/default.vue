@@ -15,12 +15,23 @@
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-8">
-                        <NuxtLink v-for="link in ['Home', 'Dashboard', 'Chart', 'Contact']" :key="link"
-                            :to="`/${link.toLowerCase()}`"
+                        <NuxtLink 
+                            to="/" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                            {{ link }}
-                            <span
-                                class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                            Home
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                        </NuxtLink>
+                        <NuxtLink 
+                            to="/dashboardExam" 
+                            class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
+                            Dashboard
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                        </NuxtLink>
+                        <NuxtLink 
+                            to="/chartExam" 
+                            class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
+                            Chart
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                     </div>
 
