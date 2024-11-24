@@ -6,31 +6,31 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
                         <img :src="iconPath" class="w-12 h-12 hover:scale-110 transition-transform" alt="MyDurian Logo" />
-                        <NuxtLink to="/home" class="text-white font-bold text-2xl hover:text-lime-400 transition-all font-kanit">MyDurian</NuxtLink>
+                        <NuxtLink to="home" class="text-white font-bold text-2xl hover:text-lime-400 transition-all font-kanit">MyDurian</NuxtLink>
                     </div>
 
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-8">
                         <NuxtLink 
-                            to="/users/home" 
+                            to="home" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Home
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/users/dashboard" 
+                            to="dashboard" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Dashboard
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/users/chart" 
+                            to="chart" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Chart
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/users/database" 
+                            to="database" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Database
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>

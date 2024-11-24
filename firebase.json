@@ -1,0 +1,18 @@
+{
+  "hosting": [
+    {
+      "public": "pages",
+      "target": "second"
+    },
+    {
+    "target": "first",
+    "public":"public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+    }
+  ]
+  
+}

@@ -92,7 +92,7 @@
     // เรียกใช้ฟังก์ชันเมื่อหน้าโหลด
     onMounted(() => {
         fetchGoogleSheetURL();
-    });
+    })
 
     // temp chart
     const tempChart = ref({
