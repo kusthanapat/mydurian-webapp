@@ -34,7 +34,7 @@
         <!-- top show -->
         <div class="flex justify-between items-center mt-20">
             <!-- user -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
+            <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath1" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="user_text" class="text-white text-xl">user</p>
@@ -42,7 +42,7 @@
             </div>
 
             <!-- pole -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
+            <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath2" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="pole_text" class="text-white text-xl">pole</p>
@@ -50,7 +50,7 @@
             </div>
 
             <!-- warning -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
+            <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath3" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="warning_text" class="text-white text-xl">warning</p>
@@ -58,7 +58,7 @@
             </div>
 
             <!-- error -->
-            <div class="flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
+            <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
                 <img :src="iconPath4" alt="MyDurian Logo" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
                     <p id="error_text" class="text-white text-xl">error</p>
@@ -77,3 +77,56 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+@media (min-width: 340px) and (max-width: 768px) {
+    /* Adjust the spacing and sizing for small screens */
+    .pr-28, .pl-28 {
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+
+    .w-56 {
+        width: 45% !important; /* Reduce the width of the icons */
+    }
+
+    .h-28 {
+        height: 60px !important; /* Adjust the height */
+    }
+
+    .text-xl {
+        font-size: 1rem !important; /* Smaller font size */
+    }
+
+    .space-x-6 {
+        margin-right: 8px !important; /* Reduce space between items */
+    }
+
+    /* Adjust iframe height for smaller screens */
+    iframe {
+        height: 250px !important;
+    }
+
+    /* Stack the icons vertically for smaller screens */
+    .flex {
+        flex-direction: column;
+        align-items: start;
+        margin-top: 10%;
+    }
+
+    .box_data {
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .space-y-16 {
+        margin-top: 1rem !important; /* Adjust space between sections */
+    }
+
+    /* Reduce image size for smaller screens */
+    img {
+        width: 50px !important;  /* Set a specific width */
+        height: 50px !important; /* Set a specific height */
+    }
+}
+</style>

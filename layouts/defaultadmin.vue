@@ -2,40 +2,59 @@
     <div class="min-h-screen bg-gradient-to-b from-gray-900 to-black font-noto">
         <!-- Navigation -->
         <nav class="bg-gray-900/95 backdrop-blur-md p-4 w-full fixed z-50 shadow-lg">
-            <div class="container mx-auto">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <img :src="iconPath" class="w-12 h-12 hover:scale-110 transition-transform" alt="MyDurian Logo" />
-                        <NuxtLink to="/admin" class="text-white font-bold text-2xl hover:text-lime-400 transition-all font-kanit">MyDurian</NuxtLink>
-                    </div>
+            <div class="container mx-auto flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-4">
+                    <img :src="iconPath" class="w-12 h-12 hover:scale-110 transition-transform" alt="MyDurian Logo" />
+                    <NuxtLink to="/admin" class="text-white font-bold text-2xl hover:text-lime-400 transition-all font-kanit">
+                        MyDurian
+                    </NuxtLink>
+                </div>
 
-                    <!-- Desktop Navigation -->
-                    <div class="hidden md:flex space-x-8">
-                        <NuxtLink 
-                            to="admin" 
-                            class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                            Home
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-                        </NuxtLink>
-                        <NuxtLink 
-                            to="addadmin" 
-                            class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                            Admin
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-                        </NuxtLink>
-                        <NuxtLink 
-                            to="usersetting" 
-                            class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                            User Setting
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
-                        </NuxtLink>
-                    </div>
+                <!-- Hamburger Menu (768px or smaller) -->
+                <div class="hamburger md:hidden" @click="toggleMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
 
-                    <div class="hidden md:flex space-x-4">
-                        <NuxtLink to="/" class="px-6 py-2 text-gray-300 hover:text-white border border-transparent hover:border-lime-400 rounded-lg transition-all font-kanit">
-                            Logout
-                        </NuxtLink>
-                    </div>
+                <!-- Mobile Menu -->
+                <div v-if="showMenu" class="mobile-menu md:hidden">
+                    <NuxtLink to="admin" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Home</NuxtLink>
+                    <NuxtLink to="addadmin" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Admin</NuxtLink>
+                    <NuxtLink to="usersetting" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">User Setting</NuxtLink>
+                    <NuxtLink to="/" class="px-6 py-2 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all font-kanit">
+                        Logout
+                    </NuxtLink>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <NuxtLink 
+                        to="admin" 
+                        class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
+                        Home
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                    </NuxtLink>
+                    <NuxtLink 
+                        to="addadmin" 
+                        class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
+                        Admin
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                    </NuxtLink>
+                    <NuxtLink 
+                        to="usersetting" 
+                        class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
+                        User Setting
+                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
+                    </NuxtLink>
+                </div>
+
+                <div class="hidden md:flex space-x-4">
+                    <NuxtLink to="/"
+                        class="px-6 py-2 text-gray-300 hover:text-white border border-transparent hover:border-lime-400 rounded-lg transition-all font-kanit">
+                        Logout
+                    </NuxtLink>
                 </div>
             </div>
         </nav>
@@ -93,7 +112,15 @@
 </template>
 
 <script setup>
-import iconPath from '~/assets/images/icon_durian.png';
+    // จัดการสถานะของ Mobile Menu
+    import { ref } from 'vue';
+    import iconPath from '~/assets/images/icon_durian.png';
+
+    const showMenu = ref(false);
+
+    const toggleMenu = () => {
+        showMenu.value = !showMenu.value;
+    };
 </script>
 
 <style>
@@ -113,5 +140,35 @@ import iconPath from '~/assets/images/icon_durian.png';
 
 .font-noto {
     font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* Mobile Menu Styles */
+@media (min-width: 340px) and (max-width: 768px) {
+    .md\\:flex {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        gap: 4px;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background-color: white;
+        border-radius: 3px;
+    }
 }
 </style>

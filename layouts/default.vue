@@ -119,15 +119,15 @@
 </template>
 
 <script setup>
-// จัดการสถานะของ Mobile Menu
-import { ref } from 'vue';
-import iconPath from '~/assets/images/icon_durian.png';
+    // จัดการสถานะของ Mobile Menu
+    import { ref } from 'vue';
+    import iconPath from '~/assets/images/icon_durian.png';
 
-const showMenu = ref(false);
+    const showMenu = ref(false);
 
-const toggleMenu = () => {
-    showMenu.value = !showMenu.value;
-};
+    const toggleMenu = () => {
+        showMenu.value = !showMenu.value;
+    };
 </script>
 
 <style>
@@ -150,7 +150,7 @@ const toggleMenu = () => {
 }
 
 /* Mobile Menu Styles */
-@media (min-width: 414px) and (max-width: 768px) {
+@media (min-width: 340px) and (max-width: 768px) {
     .md\\:flex {
         display: none;
     }

@@ -363,4 +363,49 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
 }
+
+@media (max-width: 768px) and (min-width: 340px) {
+    .flex {
+        flex-direction: column;
+        align-items: center;
+        space-y: 5px;
+    }
+
+    .flex.space-x-5 {
+        flex-direction: column;
+        space-x: 0;
+        space-y: 8px;
+    }
+
+    button {
+        width: 90%;
+        font-size: 0.9rem;
+    }
+
+    .text-3xl {
+        font-size: 1.5rem;
+    }
+
+    .text-xl {
+        font-size: 1rem;
+    }
+
+    .chart-container {
+        max-width: 90%;
+    }
+
+    .h-full {
+        padding: 10px;
+    }
+
+    .pt-20 {
+        padding-top: 10px;
+    }
+
+    .pr-28,
+    .pl-28 {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
 </style>

@@ -545,4 +545,57 @@
 .chart-container {
   max-width: 300px;
 }
+
+/* Media query for small screens */
+@media (min-width: 340px) and (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+  }
+
+  .space-x-20 {
+    gap: 1rem; /* Adjust spacing for smaller screens */
+  }
+
+  .h-full {
+    height: auto; /* Allow height to adjust */
+  }
+
+  /* Custom width adjustments */
+  .w-full {
+    width: 100% !important; /* Ensure full width */
+  }
+
+  .w-10 {
+    width: 100% !important; /* Use full width on small screens */
+  }
+
+  .items-center {
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .justify-between {
+    justify-content: space-around; /* Adjust justification for smaller screens */
+  }
+
+  .text-3xl {
+    font-size: 1.5rem; /* Reduce font size for better fit */
+  }
+
+  .pl-28, .pr-28 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .pt-4 {
+    padding-top: 1rem;
+  }
+
+  .pl-6 {
+    padding-left: 1rem;
+  }
+
+  .VueApexCharts {
+    height: 250px; /* Reduce chart height for smaller screens */
+  }
+}
 </style>
