@@ -150,7 +150,7 @@ const toggleMenu = () => {
 }
 
 /* Mobile Menu Styles */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .md\\:flex {
         display: none;
     }

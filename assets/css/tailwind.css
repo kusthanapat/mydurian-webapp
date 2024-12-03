@@ -93,7 +93,7 @@
     }
 
     /* computer */
-    @media (min-width: 768px){
+    @media (min-width: 480px){
         /* sidebar */
         .sidebar {
             display: block;
@@ -115,18 +115,5 @@
         }
     }
 
-    /* mobile */
-    @media (max-width: 767.98px){   
-        /* sidebar */
-        .sidebar {
-            display: none;;
-        }
-
-        /* navbar */
-
-        .navbar {
-            display: block;
-        }
-    }
 
 }
