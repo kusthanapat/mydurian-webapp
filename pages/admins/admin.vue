@@ -207,6 +207,5 @@
                     </table>
                 </div>
         </div>
-
     </div>
 </template>

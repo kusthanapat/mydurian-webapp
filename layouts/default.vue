@@ -1,7 +1,7 @@
 <template>
-    <div class="min-h-screen w-screen bg-gradient-to-b from-gray-900 to-black font-noto">
+    <div class="min-h-screen bg-gradient-to-b from-gray-900 to-black font-noto">
         <!-- Navigation -->
-        <nav class="bg-gray-900/95 backdrop-blur-md p-4 w-screen fixed z-50 shadow-lg">
+        <nav class="bg-gray-900/95 backdrop-blur-md p-4 w-full fixed z-50 shadow-lg">
             <div class="container mx-auto">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">

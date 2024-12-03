@@ -12,19 +12,19 @@
                     <!-- Desktop Navigation -->
                     <div class="hidden md:flex space-x-8">
                         <NuxtLink 
-                            to="/admin" 
+                            to="admin" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Home
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/addAdmin" 
+                            to="addadmin" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             Admin
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                         </NuxtLink>
                         <NuxtLink 
-                            to="/userSetting" 
+                            to="usersetting" 
                             class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                             User Setting
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>

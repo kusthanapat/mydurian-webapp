@@ -5,5 +5,5 @@
 </script>
 
 <template>
-    <div>add admin</div>
+    <div>Admin</div>
 </template>
