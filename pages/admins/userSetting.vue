@@ -27,6 +27,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    definePageMeta({
+        layout: "defaultadmin"
+    });
+
     // Dropdown Options for Calibration
     const calibrateFieldMapping = {
     "อุณหภูมิ": { userMin: "x_user_temp_min", userMax: "x_user_temp_max", ourMin: "x_our_temp_min", ourMax: "x_our_temp_max", mOur: "m_our_temp", cOur: "c_our_temp" },
