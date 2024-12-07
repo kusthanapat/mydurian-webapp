@@ -1,246 +1,246 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import VueApexCharts from 'vue3-apexcharts';
+    import { ref, onMounted } from 'vue';
+    import { useRoute } from 'vue-router';
+    import { initializeApp } from 'firebase/app';
+    import { getFirestore, doc, getDoc } from 'firebase/firestore';
+    import VueApexCharts from 'vue3-apexcharts';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
-    authDomain: "checklogin-67a92.firebaseapp.com",
-    projectId: "checklogin-67a92",
-    storageBucket: "checklogin-67a92.appspot.com",
-    messagingSenderId: "246538906966",
-    appId: "1:246538906966:web:2e4399caaa96210df23af7",
-    measurementId: "G-X3068LRCWT"
-};
+    const firebaseConfig = {
+        apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+        authDomain: "checklogin-67a92.firebaseapp.com",
+        projectId: "checklogin-67a92",
+        storageBucket: "checklogin-67a92.appspot.com",
+        messagingSenderId: "246538906966",
+        appId: "1:246538906966:web:2e4399caaa96210df23af7",
+        measurementId: "G-X3068LRCWT"
+    };
 
-definePageMeta({
-    layout: "defaultuser"
-});
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const route = useRoute();
-const uid = route.query.uid;
-const error = ref(null);
-const showChart = ref(false);
-const googleSheetURL = ref('');
-const currentDayOffset = ref(0);
-const displayDate = ref('');
-
-// Chart Options
-const chartOptions = ref({
-    chart: {
-        type: 'line',
-        height: 350,
-        animations: {
-            enabled: true
-        },
-        background: 'transparent'
-    },
-    stroke: {
-        curve: 'smooth',
-        width: 2,
-    },
-    colors: ['#00E396', '#008FFB', '#FEB019'],
-    dataLabels: {
-        enabled: false
-    },
-    xaxis: {
-        categories: [],
-        labels: {
-            rotate: -45,
-            rotateAlways: true,
-            style: {
-                colors: '#fff'
-            }
-        }
-    },
-    yaxis: {
-        title: {
-            text: 'Values',
-            style: {
-                color: '#fff'
-            }
-        },
-        labels: {
-            style: {
-                colors: '#fff'
-            }
-        }
-    },
-    tooltip: {
-        theme: 'dark',
-        y: {
-            formatter: function (val) {
-                return `${val} units`;
-            }
-        }
-    },
-    grid: {
-        borderColor: '#535A6C',
-        xaxis: {
-            lines: {
-                show: true
-            }
-        }
-    }
-});
-
-// Series Data
-const seriesDataTemp = ref([
-    { name: 'Temperature', data: [] },
-    { name: 'Soil Temp', data: [] }
-]);
-const seriesDataHumi = ref([
-    { name: 'Humidity', data: [] },
-    { name: 'Soil Humidity', data: [] }
-]);
-const seriesDataMatters = ref([
-    { name: 'Nitrogen', data: [] },
-    { name: 'Phosphorus', data: [] },
-    { name: 'Potassium', data: [] }
-]);
-const seriesDataPH = ref([{ name: 'PH', data: [] }]);
-const seriesDataSEC = ref([{ name: 'Electric', data: [] }]);
-const seriesDataOthers = ref([
-    { name: 'Lux', data: [] },
-    { name: 'Pressure', data: [] },
-    { name: 'Wind', data: [] }
-]);
-
-async function fetchGoogleSheetURL() {
-    try {
-        error.value = null;
-        const docRef = doc(db, 'users', uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            googleSheetURL.value = docSnap.data().googleSheet;
-            console.log('Google Sheet URL:', googleSheetURL.value);
-            await fetchDataAndCreateCharts();
-            showChart.value = true;
-        } else {
-            error.value = 'No document found!';
-            console.log('No such document!');
-        }
-    } catch (err) {
-        error.value = `Error fetching document: ${err.message}`;
-        console.error('Error fetching document:', err);
-    }
-}
-
-async function fetchDataAndCreateCharts() {
-    try {
-        error.value = null;
-        const response = await fetch(googleSheetURL.value);
-        const data = await response.json();
-        
-        if (Array.isArray(data) && data.length > 0) {
-            let latestDate = new Date(data[data.length - 1].TimeStamp);
-            let filteredData = data.filter(row => {
-                let rowDate = new Date(row.TimeStamp);
-                return rowDate.toDateString() === latestDate.toDateString();
-            });
-
-            if (filteredData.length > 0) {
-                updateChartData(filteredData, latestDate);
-            } else {
-                error.value = 'No data found for the selected date range';
-            }
-        } else {
-            error.value = 'Invalid data format or empty data';
-        }
-    } catch (err) {
-        error.value = `Error fetching data: ${err.message}`;
-        console.error('Error:', err);
-    }
-}
-
-function updateChartData(filteredData, date) {
-    displayDate.value = date.toDateString();
-
-    // Update all series data
-    seriesDataTemp.value[0].data = filteredData.map(row => row.Temperature ? parseFloat(row.Temperature).toFixed(1) : 0);
-    seriesDataTemp.value[1].data = filteredData.map(row => row.ST ? parseFloat(row.ST).toFixed(1) : 0);
-    seriesDataHumi.value[0].data = filteredData.map(row => row.Humidity ? parseFloat(row.Humidity).toFixed(1) : 0);
-    seriesDataHumi.value[1].data = filteredData.map(row => row.SH ? parseFloat(row.SH).toFixed(1) : 0);
-    seriesDataMatters.value[0].data = filteredData.map(row => row.SN ? parseFloat(row.SN).toFixed(1) : 0);
-    seriesDataMatters.value[1].data = filteredData.map(row => row.SP ? parseFloat(row.SP).toFixed(1) : 0);
-    seriesDataMatters.value[2].data = filteredData.map(row => row.SK ? parseFloat(row.SK).toFixed(1) : 0);
-    seriesDataPH.value[0].data = filteredData.map(row => row.SPH ? parseFloat(row.SPH).toFixed(1) : 0);
-    seriesDataSEC.value[0].data = filteredData.map(row => row.SEC ? parseFloat(row.SEC).toFixed(1) : 0);
-    seriesDataOthers.value[0].data = filteredData.map(row => row.Lux ? parseFloat(row.Lux).toFixed(1) : 0);
-    seriesDataOthers.value[1].data = filteredData.map(row => row.Pressure ? parseFloat(row.Pressure).toFixed(1) : 0);
-    seriesDataOthers.value[2].data = filteredData.map(row => row.Wind ? parseFloat(row.Wind).toFixed(1) : 0);
-
-    // Update x-axis categories
-    chartOptions.value.xaxis.categories = filteredData.map(row => {
-        let date = new Date(row.TimeStamp);
-        return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    definePageMeta({
+        layout: "defaultuser"
     });
 
-    // Force chart update
-    chartOptions.value = { ...chartOptions.value };
-}
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-async function fetchDataByDateRange(startDate, endDate) {
-    try {
-        const response = await fetch(googleSheetURL.value);
-        const data = await response.json();
-        
-        if (Array.isArray(data) && data.length > 0) {
-            let filteredData = data.filter(row => {
-                let rowDate = new Date(row.TimeStamp);
-                return rowDate >= startDate && rowDate <= endDate;
-            });
+    const route = useRoute();
+    const uid = route.query.uid;
+    const error = ref(null);
+    const showChart = ref(false);
+    const googleSheetURL = ref('');
+    const currentDayOffset = ref(0);
+    const displayDate = ref('');
 
-            if (filteredData.length > 0) {
-                updateChartData(filteredData, endDate);
-            } else {
-                error.value = 'No data found for the selected date range';
+    // Chart Options
+    const chartOptions = ref({
+        chart: {
+            type: 'line',
+            height: 350,
+            animations: {
+                enabled: true
+            },
+            background: 'transparent'
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+        },
+        colors: ['#00E396', '#008FFB', '#FEB019'],
+        dataLabels: {
+            enabled: false
+        },
+        xaxis: {
+            categories: [],
+            labels: {
+                rotate: -45,
+                rotateAlways: true,
+                style: {
+                    colors: '#fff'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Values',
+                style: {
+                    color: '#fff'
+                }
+            },
+            labels: {
+                style: {
+                    colors: '#fff'
+                }
+            }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: {
+                formatter: function (val) {
+                    return `${val} units`;
+                }
+            }
+        },
+        grid: {
+            borderColor: '#535A6C',
+            xaxis: {
+                lines: {
+                    show: true
+                }
             }
         }
-    } catch (err) {
-        error.value = `Error fetching data: ${err.message}`;
-        console.error('Error:', err);
+    });
+
+    // Series Data
+    const seriesDataTemp = ref([
+        { name: 'Temperature', data: [] },
+        { name: 'Soil Temp', data: [] }
+    ]);
+    const seriesDataHumi = ref([
+        { name: 'Humidity', data: [] },
+        { name: 'Soil Humidity', data: [] }
+    ]);
+    const seriesDataMatters = ref([
+        { name: 'Nitrogen', data: [] },
+        { name: 'Phosphorus', data: [] },
+        { name: 'Potassium', data: [] }
+    ]);
+    const seriesDataPH = ref([{ name: 'PH', data: [] }]);
+    const seriesDataSEC = ref([{ name: 'Electric', data: [] }]);
+    const seriesDataOthers = ref([
+        { name: 'Lux', data: [] },
+        { name: 'Pressure', data: [] },
+        { name: 'Wind', data: [] }
+    ]);
+
+    async function fetchGoogleSheetURL() {
+        try {
+            error.value = null;
+            const docRef = doc(db, 'users', uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                googleSheetURL.value = docSnap.data().googleSheet;
+                console.log('Google Sheet URL:', googleSheetURL.value);
+                await fetchDataAndCreateCharts();
+                showChart.value = true;
+            } else {
+                error.value = 'No document found!';
+                console.log('No such document!');
+            }
+        } catch (err) {
+            error.value = `Error fetching document: ${err.message}`;
+            console.error('Error fetching document:', err);
+        }
     }
-}
 
-function fetchDataAndCreateCharts7days() {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 7);
-    fetchDataByDateRange(startDate, endDate);
-}
+    async function fetchDataAndCreateCharts() {
+        try {
+            error.value = null;
+            const response = await fetch(googleSheetURL.value);
+            const data = await response.json();
+            
+            if (Array.isArray(data) && data.length > 0) {
+                let latestDate = new Date(data[data.length - 1].TimeStamp);
+                let filteredData = data.filter(row => {
+                    let rowDate = new Date(row.TimeStamp);
+                    return rowDate.toDateString() === latestDate.toDateString();
+                });
 
-function fetchDataAndCreateCharts30Days() {
-    const currentDate = new Date();
-    const firstDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-    const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    fetchDataByDateRange(firstDayOfLastMonth, lastDayOfLastMonth);
-}
+                if (filteredData.length > 0) {
+                    updateChartData(filteredData, latestDate);
+                } else {
+                    error.value = 'No data found for the selected date range';
+                }
+            } else {
+                error.value = 'Invalid data format or empty data';
+            }
+        } catch (err) {
+            error.value = `Error fetching data: ${err.message}`;
+            console.error('Error:', err);
+        }
+    }
 
-function fetchDataAndCreateChartsCurrentMonth() {
-    const currentDate = new Date();
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    fetchDataByDateRange(firstDayOfMonth, lastDayOfMonth);
-}
+    function updateChartData(filteredData, date) {
+        displayDate.value = date.toDateString();
 
-function fetchDataAndCreateChartsByOffset(offset) {
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() - offset);
-    const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999));
-    fetchDataByDateRange(startOfDay, endOfDay);
-}
+        // Update all series data
+        seriesDataTemp.value[0].data = filteredData.map(row => row.Temperature ? parseFloat(row.Temperature).toFixed(1) : 0);
+        seriesDataTemp.value[1].data = filteredData.map(row => row.ST ? parseFloat(row.ST).toFixed(1) : 0);
+        seriesDataHumi.value[0].data = filteredData.map(row => row.Humidity ? parseFloat(row.Humidity).toFixed(1) : 0);
+        seriesDataHumi.value[1].data = filteredData.map(row => row.SH ? parseFloat(row.SH).toFixed(1) : 0);
+        seriesDataMatters.value[0].data = filteredData.map(row => row.SN ? parseFloat(row.SN).toFixed(1) : 0);
+        seriesDataMatters.value[1].data = filteredData.map(row => row.SP ? parseFloat(row.SP).toFixed(1) : 0);
+        seriesDataMatters.value[2].data = filteredData.map(row => row.SK ? parseFloat(row.SK).toFixed(1) : 0);
+        seriesDataPH.value[0].data = filteredData.map(row => row.SPH ? parseFloat(row.SPH).toFixed(1) : 0);
+        seriesDataSEC.value[0].data = filteredData.map(row => row.SEC ? parseFloat(row.SEC).toFixed(1) : 0);
+        seriesDataOthers.value[0].data = filteredData.map(row => row.Lux ? parseFloat(row.Lux).toFixed(1) : 0);
+        seriesDataOthers.value[1].data = filteredData.map(row => row.Pressure ? parseFloat(row.Pressure).toFixed(1) : 0);
+        seriesDataOthers.value[2].data = filteredData.map(row => row.Wind ? parseFloat(row.Wind).toFixed(1) : 0);
 
-onMounted(async () => {
-    await fetchGoogleSheetURL();
-});
+        // Update x-axis categories
+        chartOptions.value.xaxis.categories = filteredData.map(row => {
+            let date = new Date(row.TimeStamp);
+            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        });
+
+        // Force chart update
+        chartOptions.value = { ...chartOptions.value };
+    }
+
+    async function fetchDataByDateRange(startDate, endDate) {
+        try {
+            const response = await fetch(googleSheetURL.value);
+            const data = await response.json();
+            
+            if (Array.isArray(data) && data.length > 0) {
+                let filteredData = data.filter(row => {
+                    let rowDate = new Date(row.TimeStamp);
+                    return rowDate >= startDate && rowDate <= endDate;
+                });
+
+                if (filteredData.length > 0) {
+                    updateChartData(filteredData, endDate);
+                } else {
+                    error.value = 'No data found for the selected date range';
+                }
+            }
+        } catch (err) {
+            error.value = `Error fetching data: ${err.message}`;
+            console.error('Error:', err);
+        }
+    }
+
+    function fetchDataAndCreateCharts7days() {
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(endDate.getDate() - 7);
+        fetchDataByDateRange(startDate, endDate);
+    }
+
+    function fetchDataAndCreateCharts30Days() {
+        const currentDate = new Date();
+        const firstDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        fetchDataByDateRange(firstDayOfLastMonth, lastDayOfLastMonth);
+    }
+
+    function fetchDataAndCreateChartsCurrentMonth() {
+        const currentDate = new Date();
+        const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        fetchDataByDateRange(firstDayOfMonth, lastDayOfMonth);
+    }
+
+    function fetchDataAndCreateChartsByOffset(offset) {
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() - offset);
+        const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999));
+        fetchDataByDateRange(startOfDay, endOfDay);
+    }
+
+    onMounted(async () => {
+        await fetchGoogleSheetURL();
+    });
 </script>
 
 <template>
