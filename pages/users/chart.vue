@@ -365,17 +365,6 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) and (min-width: 340px) {
-    .flex {
-        flex-direction: column;
-        align-items: center;
-        space-y: 5px;
-    }
-
-    .flex.space-x-5 {
-        flex-direction: column;
-        space-x: 0;
-        space-y: 8px;
-    }
 
     button {
         width: 90%;

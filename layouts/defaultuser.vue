@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="flex items-center space-x-4">
                     <img :src="iconPath" class="w-12 h-12 hover:scale-110 transition-transform" alt="MyDurian Logo" />
-                    <NuxtLink to="home" class="text-white font-bold text-2xl hover:text-lime-400 transition-all font-kanit">
+                    <NuxtLink :to="{ path: 'home', query: { uid } }" class="text-white font-bold text-2xl hover:text-lime-400 transition-all font-kanit">
                         MyDurian
                     </NuxtLink>
                 </div>
@@ -20,10 +20,10 @@
 
                 <!-- Mobile Menu -->
                 <div v-if="showMenu" class="mobile-menu md:hidden">
-                    <NuxtLink to="home" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Home</NuxtLink>
-                    <NuxtLink to="dashboard" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Dashboard</NuxtLink>
-                    <NuxtLink to="chart" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Chart</NuxtLink>
-                    <NuxtLink to="database" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Database</NuxtLink>
+                    <NuxtLink :to="{ path: 'home', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Home</NuxtLink>
+                    <NuxtLink :to="{ path: 'dashboard', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Dashboard</NuxtLink>
+                    <NuxtLink :to="{ path: 'chart', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Chart</NuxtLink>
+                    <NuxtLink :to="{ path: 'database', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Database</NuxtLink>
                     <NuxtLink to="/" class="px-6 py-2 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all font-kanit">
                         Logout
                     </NuxtLink>
@@ -32,25 +32,25 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex space-x-8">
                     <NuxtLink 
-                        to="home" 
+                        :to="{ path: 'home', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                         Home
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                     <NuxtLink 
-                        to="dashboard" 
+                        :to="{ path: 'dashboard', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                         Dashboard
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                     <NuxtLink 
-                        to="chart" 
+                        :to="{ path: 'chart', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                         Chart
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                     <NuxtLink 
-                        to="database" 
+                        :to="{ path: 'database', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
                         Database
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
@@ -121,6 +121,7 @@
 <script setup>
     // จัดการสถานะของ Mobile Menu
     import { ref } from 'vue';
+    import { useRoute } from 'vue-router';
     import iconPath from '~/assets/images/icon_durian.png';
 
     const showMenu = ref(false);
@@ -128,6 +129,9 @@
     const toggleMenu = () => {
         showMenu.value = !showMenu.value;
     };
+
+    const route = useRoute();
+    const uid = route.query.uid || ''; // ถ้าไม่มี uid ใน query จะใช้ค่าเป็นค่าว่า
 </script>
 
 <style>

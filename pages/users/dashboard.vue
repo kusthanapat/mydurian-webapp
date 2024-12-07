@@ -1,15 +1,16 @@
 <script setup>
+    import VueApexCharts from "vue3-apexcharts";
     import { useRoute } from 'vue-router';
     import { ref, onMounted } from 'vue';
     import { initializeApp } from 'firebase/app';
     import { getFirestore, doc, getDoc } from 'firebase/firestore';
-    onMounted(async () => {
-        if (process.client) {
-            const { default: VueApexCharts } = await import('vue3-apexcharts');
-            app.component('apexchart', VueApexCharts); // ลงทะเบียน component
-            showChart.value = true; // แสดง chart หลังจากโหลดเสร็จ
-        }
-    });
+    // onMounted(async () => {
+    //     if (process.client) {
+    //         const { default: VueApexCharts } = await import('vue3-apexcharts');
+    //         app.component('apexchart', VueApexCharts); // ลงทะเบียน component
+    //         showChart.value = true; // แสดง chart หลังจากโหลดเสร็จ
+    //     }
+    // });
 
     const firebaseConfig = {
         apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
