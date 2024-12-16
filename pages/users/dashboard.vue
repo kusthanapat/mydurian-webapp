@@ -499,7 +499,7 @@
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="tempChart" :series="[seriesData[0]]" height="350" />
                     <VueApexCharts type="radialBar" :options="stChart" :series="[seriesData[4]]" height="350" />
                 </div>
@@ -509,7 +509,7 @@
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Humidity</p>
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="humiChart" :series="[seriesData[1]]" height="350" />
                     <VueApexCharts type="radialBar" :options="shChart" :series="[seriesData[5]]" height="350" />
                 </div>
@@ -520,7 +520,7 @@
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Soil</p>
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="sphChart" :series="[seriesData[6]]" height="300" />
                     <VueApexCharts type="radialBar" :options="snChart" :series="[seriesData[8]]" height="300" />
                     <VueApexCharts type="radialBar" :options="spChart" :series="[seriesData[9]]" height="300" />
@@ -532,7 +532,7 @@
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Others</p>
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="secChart" :series="[seriesData[7]]" height="300" />
                     <VueApexCharts type="radialBar" :options="pressureChart" :series="[seriesData[3]]" height="300" />
                     <VueApexCharts type="radialBar" :options="luxChart" :series="[seriesData[2]]" height="300" />
@@ -549,54 +549,32 @@
 
 /* Media query for small screens */
 @media (min-width: 340px) and (max-width: 768px) {
-  .flex {
-    flex-direction: column;
+    .flex {
+    flex-direction: column; /* เปลี่ยนจาก row เป็น column */
+    align-items: center; /* จัดให้อยู่ตรงกลาง */
+    justify-content: center; /* จัดให้อยู่ตรงกลาง */
   }
 
   .space-x-20 {
-    gap: 1rem; /* Adjust spacing for smaller screens */
+    gap: 1rem; /* ปรับช่องว่างสำหรับ column */
   }
 
   .h-full {
-    height: auto; /* Allow height to adjust */
+    height: auto; /* ให้ปรับความสูงอัตโนมัติ */
   }
 
-  /* Custom width adjustments */
   .w-full {
-    width: 100% !important; /* Ensure full width */
-  }
-
-  .w-10 {
-    width: 100% !important; /* Use full width on small screens */
-  }
-
-  .items-center {
-    align-items: flex-start; /* Align items to the start */
-  }
-
-  .justify-between {
-    justify-content: space-around; /* Adjust justification for smaller screens */
-  }
-
-  .text-3xl {
-    font-size: 1.5rem; /* Reduce font size for better fit */
+    width: 100% !important; /* ใช้เต็มความกว้าง */
   }
 
   .pl-28, .pr-28 {
-    padding-left: 1rem;
+    padding-left: 1rem; /* ลด padding ซ้ายขวา */
     padding-right: 1rem;
   }
 
-  .pt-4 {
-    padding-top: 1rem;
-  }
-
-  .pl-6 {
-    padding-left: 1rem;
-  }
-
   .VueApexCharts {
-    height: 250px; /* Reduce chart height for smaller screens */
+    height: 250px; /* ลดขนาดของ radialBar */
+    width: 90%; /* ให้ radialBar มีความกว้าง 90% */
   }
 }
 </style>

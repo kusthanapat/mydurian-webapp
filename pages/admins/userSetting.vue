@@ -142,6 +142,58 @@
     alert("User data updated successfully!");
     };
 
+    // ตัวแปรที่ใช้ร่วมกันในฟังก์ชันและ template
+    const x_user_min = ref('');
+    const x_user_max = ref('');
+    const m_user = ref(1); // ค่าเริ่มต้นของ m_user
+    const c_user = ref(0); // ค่าเริ่มต้นของ c_user
+    const x_our_min = ref('');
+    const x_our_max = ref('');
+    const m_our = ref(1); // ค่าเริ่มต้นของ m_our
+    const c_our = ref(0); // ค่าเริ่มต้นของ c_our
+    const y_user_min = ref('');
+    const y_user_max = ref('');
+    const y_our_min = ref('');
+    const y_our_max = ref('');
+
+    function autoTune() {
+        const x1_min = parseFloat(x_user_min.value) || 0;
+        const x1_max = parseFloat(x_user_max.value) || 0;
+        const m1 = parseFloat(m_user.value) || 1; // Default m1 = 1
+        const c1 = parseFloat(c_user.value) || 0; // Default c1 = 0
+
+        const x2_min = parseFloat(x_our_min.value) || 0;
+        const x2_max = parseFloat(x_our_max.value) || 0;
+
+        // ตรวจสอบว่า x2_max - x2_min ไม่เป็น 0 เพื่อหลีกเลี่ยงการหารด้วย 0
+        if (x2_max - x2_min === 0) {
+            console.error('Division by zero is not allowed.');
+            return;
+        }
+
+        // คำนวณค่า y1 ที่ x1_min และ x1_max
+        const y1_min = m1 * x1_min + c1;
+        const y1_max = m1 * x1_max + c1;
+
+        // คำนวณค่า m2 และ c2
+        const m2 = (y1_max - y1_min) / (x2_max - x2_min);
+        const c2 = y1_min - m2 * x2_min;
+
+        // อัปเดตค่าในตัวแปร
+        m_our.value = m2.toFixed(4) || 1; // หากคำนวณไม่ได้ให้ใช้ค่าเริ่มต้น
+        c_our.value = c2.toFixed(4) || 0; // หากคำนวณไม่ได้ให้ใช้ค่าเริ่มต้น
+
+        // คำนวณค่า y2 ที่ x2_min และ x2_max หลังจากการจูน
+        const y2_min = m2 * x2_min + c2;
+        const y2_max = m2 * x2_max + c2;
+
+        // อัปเดตผลลัพธ์ y2
+        y_user_min.value = y1_min.toFixed(4);
+        y_user_max.value = y1_max.toFixed(4);
+        y_our_min.value = y2_min.toFixed(4);
+        y_our_max.value = y2_max.toFixed(4);
+    }
+
     onMounted(() => {
     fetchUserList();
     });
@@ -364,7 +416,12 @@
         </div>
 
         <button
-            class="px-8 py-4 w-1/6 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
+            @click="autoTune" class="px-8 py-4 w-1/6 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
+            Auto tune
+        </button>
+
+        <button
+            @click="updateUserData" class="px-8 py-4 w-1/6 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
             Save
         </button>
     </div>
