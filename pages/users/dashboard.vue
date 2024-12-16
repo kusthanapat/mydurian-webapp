@@ -495,7 +495,7 @@
 <template>
     <div class="flex flex-col justify-center items-center space-y-8">
         <div class="h-full w-full flex justify-between space-x-20 pr-28 pl-28 mt-20">
-            <div class="flex flex-col w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
+            <div class="temperature flex flex-col w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
                 </div>
@@ -505,7 +505,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
+            <div class="humidity flex flex-col w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Humidity</p>
                 </div>
@@ -575,6 +575,15 @@
   .VueApexCharts {
     height: 250px; /* ลดขนาดของ radialBar */
     width: 90%; /* ให้ radialBar มีความกว้าง 90% */
+  }
+
+  .temperature, .humidity {
+    width: 90%; /* เปลี่ยนความกว้างเป็น 90% */
+    flex-direction: column; /* จัดให้อยู่ในแนว column */
+    padding-left: 1rem; /* ลด padding ซ้าย */
+    padding-right: 1rem; /* ลด padding ขวา */
+    align-items: center; /* จัดให้อยู่ตรงกลาง */
+    justify-content: center; /* จัดให้อยู่ตรงกลาง */
   }
 }
 </style>
