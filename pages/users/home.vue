@@ -1,132 +1,193 @@
 <script setup>
+    // นำเข้าไอคอนรูปภาพ
     import iconPath1 from '~/assets/images/user.png';
     import iconPath2 from '~/assets/images/electric-pole.png';
     import iconPath3 from '~/assets/images/crisis.png';
     import iconPath4 from '~/assets/images/mark.png';
 
+    // นำเข้า Vue composables
+    import { useRoute, useRouter } from 'vue-router';
+    import { ref, onMounted } from 'vue';
+
+    // นำเข้า Firebase
+    import { initializeApp } from 'firebase/app';
+    import { getFirestore, doc, getDoc } from 'firebase/firestore';
+
+    // ตั้งค่า Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+        authDomain: "checklogin-67a92.firebaseapp.com",
+        projectId: "checklogin-67a92",
+        storageBucket: "checklogin-67a92.appspot.com",
+        messagingSenderId: "246538906966",
+        appId: "1:246538906966:web:2e4399caaa96210df23af7",
+        measurementId: "G-X3068LRCWT",
+    };
+
+    // Initialize Firebase และ Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Meta layout
     definePageMeta({
         layout: "defaultuser"
-    })
+    });
 
-    import { useRoute } from 'vue-router';
-
-    // Get the route object
+    // ใช้ route และ router
     const route = useRoute();
+    const router = useRouter();
 
-    // Extract the UID from the query parameter
+    // ดึง UID จาก query parameter
     const uid = route.query.uid;
-
-    // Log the UID to confirm it's received
     console.log('User UID:', uid);
 
-    // Function to navigate to a page with the user's UID in the query string
+    // ฟังก์ชันนำทางไปหน้าอื่น พร้อม UID
     const navigateTo = (path) => {
         router.push({ path: path, query: { uid: uid } });
     };
 
-    // Use the UID to fetch user-specific data or perform any operations needed
-    // เช่น การดึงข้อมูลผู้ใช้จาก Firebase Firestore
+    // State สำหรับเก็บรูปภาพแผนที่
+    const Mapimages = ref('');
+
+    // โหลดข้อมูลจาก Firestore
+    const loadMapImage = async () => {
+        if (uid) {
+            try {
+                const userDocRef = doc(db, 'users', uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userData = userDocSnap.data();
+                    Mapimages.value = userData.map || '';
+                } else {
+                    console.log('No such document!');
+                }
+            } catch (error) {
+                console.error('Error fetching document:', error);
+            }
+        }
+    };
+
+    // โหลดข้อมูลเมื่อ component ถูก mount
+    onMounted(() => {
+        loadMapImage();
+    });
+
+    // ฟังก์ชันสำหรับ map pin
+    const handlePinClick = () => {
+        alert('Map Pin Clicked!');
+    };
 </script>
 
 <template>
     <div class="h-full w-full pr-28 pl-28 space-y-16">
-        
         <!-- top show -->
         <div class="flex justify-between items-center mt-20">
             <!-- user -->
             <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
-                <img :src="iconPath1" alt="MyDurian Logo" class="w-20 h-20" />
+                <img :src="iconPath1" alt="User Icon" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
-                    <p id="user_text" class="text-white text-xl">user</p>
+                    <p class="text-white text-xl">User</p>
                 </div>
             </div>
 
             <!-- pole -->
             <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
-                <img :src="iconPath2" alt="MyDurian Logo" class="w-20 h-20" />
+                <img :src="iconPath2" alt="Pole Icon" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
-                    <p id="pole_text" class="text-white text-xl">pole</p>
+                    <p class="text-white text-xl">Pole</p>
                 </div>
             </div>
 
             <!-- warning -->
             <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
-                <img :src="iconPath3" alt="MyDurian Logo" class="w-20 h-20" />
+                <img :src="iconPath3" alt="Warning Icon" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
-                    <p id="warning_text" class="text-white text-xl">warning</p>
+                    <p class="text-white text-xl">Warning</p>
                 </div>
             </div>
 
             <!-- error -->
             <div class="box_data flex flex-row space-x-6 w-56 h-28 bg-slate-500 bg-opacity-20 justify-center items-center rounded-lg">
-                <img :src="iconPath4" alt="MyDurian Logo" class="w-20 h-20" />
+                <img :src="iconPath4" alt="Error Icon" class="w-20 h-20" />
                 <div class="flex flex-col items-center justify-center">
-                    <p id="error_text" class="text-white text-xl">error</p>
+                    <p class="text-white text-xl">Error</p>
                 </div>
             </div>
         </div>
 
         <!-- weather iframe -->
         <div class="w-full flex justify-center items-center">
-            <iframe src= "https://www.tmd.go.th/weatherForecast7DaysWidget?province=นนทบุรี" scrolling="no" frameborder="0" class="w-full h-96 bg-transparent rounded-lg"></iframe>
+            <iframe src="https://www.tmd.go.th/weatherForecast7DaysWidget?province=นนทบุรี" 
+                scrolling="no" 
+                frameborder="0" 
+                class="w-full h-96 bg-transparent rounded-lg">
+            </iframe>
         </div>   
 
         <!-- google map iframe -->
-        <div class="w-full flex justify-center items-center">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.6940547759646!2d100.87203847484058!3d12.927374787383952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310296139344efab%3A0x5777d7113c8165ed!2z4LiW4LiZ4LiZ4LiE4LiZ4LmA4LiU4Li04LiZ4Lie4Lix4LiX4Lii4Liy!5e0!3m2!1sth!2sth!4v1731184772773!5m2!1sth!2sth" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full h-96 rounded-lg"></iframe>
+        <div class="relative w-full h-96 overflow-hidden rounded-lg flex justify-center items-center">
+            <!-- Map Image -->
+            <img :src="Mapimages" alt="Map Image" class="w-full h-96 object-cover" />
+
+            <!-- Map Pin Icon -->
+            <div 
+                class="absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
+                :style="{ top: '50%', left: '50%' }" 
+                @click="handlePinClick"
+            >
+                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" 
+                     alt="Map Pin" 
+                     class="w-8 h-8" />
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.relative {
+    position: relative;
+}
+.overflow-hidden {
+    overflow: hidden;
+}
+.absolute {
+    position: absolute;
+}
+.transform {
+    transform: translate(-50%, -50%);
+}
+
+/* Responsive */
 @media (min-width: 340px) and (max-width: 768px) {
-    /* Adjust the spacing and sizing for small screens */
     .pr-28, .pl-28 {
         padding-right: 16px;
         padding-left: 16px;
     }
-
     .w-56 {
-        width: 45% !important; /* Reduce the width of the icons */
+        width: 45% !important;
     }
-
     .h-28 {
-        height: 60px !important; /* Adjust the height */
+        height: 60px !important;
     }
-
     .text-xl {
-        font-size: 1rem !important; /* Smaller font size */
+        font-size: 1rem !important;
     }
-
-    .space-x-6 {
-        margin-right: 8px !important; /* Reduce space between items */
-    }
-
-    /* Adjust iframe height for smaller screens */
     iframe {
         height: 250px !important;
     }
-
-    /* Stack the icons vertically for smaller screens */
     .flex {
         flex-direction: column;
         align-items: start;
         margin-top: 10%;
     }
-
     .box_data {
         flex-direction: row;
         width: 100%;
     }
-
-    .space-y-16 {
-        margin-top: 1rem !important; /* Adjust space between sections */
-    }
-
-    /* Reduce image size for smaller screens */
     img {
-        width: 50px !important;  /* Set a specific width */
-        height: 50px !important; /* Set a specific height */
+        width: 50px !important;
+        height: 50px !important;
     }
 }
 </style>
