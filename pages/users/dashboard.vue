@@ -578,7 +578,7 @@
   }
 
   .temperature, .humidity {
-    width: 90%; /* เปลี่ยนความกว้างเป็น 90% */
+    width: 100% !important; /* ใช้เต็มความกว้าง */
     flex-direction: column; /* จัดให้อยู่ในแนว column */
     padding-left: 1rem; /* ลด padding ซ้าย */
     padding-right: 1rem; /* ลด padding ขวา */

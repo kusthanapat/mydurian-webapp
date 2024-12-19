@@ -4,6 +4,13 @@
   // Import images
   import iconPath from '~/assets/images/icon_durian.png';
   import iconPath8 from '~/assets/images/smart_pic_use3.png';
+  
+  const dynamicImage = 'https://robotoops.com/imagesMydurian/forindex/temp-dashboard.jfif';
+
+  const imageUrls = {
+    Dashboard: 'https://robotoops.com/imagesMydurian/forindex/temp-dashboard.jfif',
+    Chart: 'https://robotoops.com/imagesMydurian/forindex/chart.jfif',
+  };
 
   const currentSlide = ref(0);
   const totalSlides = 2;
@@ -131,13 +138,21 @@
       </div>
 
       <div class="md:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div v-for="(type, index) in ['Dashboard', 'Chart']" :key="index"
-          class="bg-white/5 backdrop-blur-lg rounded-xl overflow-hidden shadow-xl hover:shadow-lime-500/20 transform hover:scale-105 transition-all duration-300">
-          <img src="https://img.thingsboard.io/iot-articles/iot-solutions-1_1090x710.png"
-            class="w-full h-48 object-cover hover:opacity-90 transition-opacity" :alt="type" />
+        <div
+          v-for="(type, index) in ['Dashboard', 'Chart']"
+          :key="index"
+          class="bg-white/5 backdrop-blur-lg rounded-xl overflow-hidden shadow-xl hover:shadow-lime-500/20 transform hover:scale-105 transition-all duration-300"
+        >
+          <!-- ใช้เงื่อนไขเพื่อตั้งค่า URL ของภาพ -->
+          <img
+            :src="imageUrls[type]"
+            class="w-full h-48 object-cover hover:opacity-90 transition-opacity"
+            :alt="type"
+          />
           <div class="p-6">
             <h3 class="text-xl font-semibold text-white">{{ type }}</h3>
-            <p class="mt-2 text-gray-400">Interactive and customizable {{ type.toLowerCase() }} for data visualization.
+            <p class="mt-2 text-gray-400">
+              Interactive and customizable {{ type.toLowerCase() }} for data visualization.
             </p>
           </div>
         </div>
