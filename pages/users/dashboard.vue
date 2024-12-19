@@ -494,7 +494,31 @@
 
 <template>
     <div class="flex flex-col justify-center items-center space-y-8">
-        <div class="h-full w-full flex justify-between space-x-20 pr-28 pl-28 mt-20">
+        <div class="h-full w-full flex flex-col md:flex-row justify-between md:space-x-20 space-y-4 md:space-y-0 pr-6 md:pr-28 pl-6 md:pl-28 mt-10">
+            <!-- Temperature -->
+            <div class="temperature flex flex-col w-full md:w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
+                <div class="w-full flex justify-start pt-4 pl-6">
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
+                </div>
+                <div class="flex justify-between items-center w-full">
+                    <VueApexCharts type="radialBar" :options="tempChart" :series="[seriesData[0]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="stChart" :series="[seriesData[4]]" height="350" />
+                </div>
+            </div>
+
+            <!-- Humidity -->
+            <div class="humidity flex flex-col w-full md:w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
+                <div class="w-full flex justify-start pt-4 pl-6">
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Humidity</p>
+                </div>
+                <div class="flex justify-between items-center w-full">
+                    <VueApexCharts type="radialBar" :options="humiChart" :series="[seriesData[1]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="shChart" :series="[seriesData[5]]" height="350" />
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="h-full w-full flex justify-between space-x-20 pr-28 pl-28 mt-20">
             <div class="temperature flex flex-col w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
@@ -514,7 +538,7 @@
                     <VueApexCharts type="radialBar" :options="shChart" :series="[seriesData[5]]" height="350" />
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="flex flex-col w-10/12 justify-center items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
@@ -578,7 +602,7 @@
   }
 
   .temperature, .humidity {
-    width: 100% !important; /* ใช้เต็มความกว้าง */
+    width: 90% !important; /* ใช้เต็มความกว้าง */
     flex-direction: column; /* จัดให้อยู่ในแนว column */
     padding-left: 1rem; /* ลด padding ซ้าย */
     padding-right: 1rem; /* ลด padding ขวา */

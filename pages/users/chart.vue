@@ -251,7 +251,7 @@
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="flex space-x-5 items-baseline w-full justify-center">
+        <div class="button-container flex space-x-5 items-baseline w-full justify-center">
             <button @click="fetchDataAndCreateChartsByOffset(currentDayOffset++)"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
                 Previous Day
@@ -357,18 +357,30 @@
 </template>
 
 <style scoped>
-.chart-container {
-    max-width: 1000px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-}
+    .chart-container {
+        max-width: 1000px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+    }
 
 @media (max-width: 768px) and (min-width: 340px) {
 
+    .button-container {
+        display: grid; /* ใช้ Grid Layout */
+        grid-template-columns: repeat(2, 1fr); /* 3 ปุ่มต่อแถว */
+        gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+    }
+
     button {
-        width: 90%;
-        font-size: 0.9rem;
+        font-size: 0.9rem; /* ขนาดตัวหนังสือเล็กลง */
+        padding: 8px; /* ลดขนาด padding */
     }
 
     .text-3xl {

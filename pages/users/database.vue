@@ -148,9 +148,9 @@
     <div class="h-full w-full pr-28 pl-28 space-y-16 pt-20">
         <!-- Dropdown for selecting data -->
         <div class="w-full flex space-x-14 items-baseline">
-            <div class="w-full flex space-x-6 items-baseline" :style="{ width: '100%' }">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">Select Data:</h2>
-                <select v-model="selectedData" class="w-full h-full px-4 py-3 rounded-lg bg-slate-200 text-gray-500 border border-none">
+            <div class="w-full flex items-baseline responsive-container">
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8 responsive-heading">Select Data:</h2>
+                <select v-model="selectedData" class="w-full h-full px-4 py-3 rounded-lg bg-slate-200 text-gray-500 border border-none responsive-select">
                     <option disabled value="">Select Data</option>
                     <option v-for="option in dataOptions" :key="option.value" :value="option.value">
                         {{ option.text }}
@@ -163,9 +163,9 @@
             </button>
         </div>
 
-        <!-- Table for displaying data -->
-        <div class="bg-white p-4 rounded-lg shadow-lg" :style="{ height: 'auto' }">
-            <table class="min-w-full border border-gray-800 border-collapse rounded-lg overflow-hidden shadow-md">
+        <!-- Scrollable Table Container -->
+        <div class="table-container bg-white p-4 rounded-lg shadow-lg overflow-x-auto" :style="{ height: 'auto' }">
+            <table class="custom-table min-w-full border border-gray-800 border-collapse rounded-lg overflow-hidden shadow-md">
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Time</th>
@@ -208,47 +208,37 @@
 </template>
 
 <style scoped>
+.table-container {
+    width: 90%; /* กว้าง 90% */
+    margin: 0 auto; /* จัดกึ่งกลางหน้าจอ */
+}
+
+.custom-table {
+    width: 100%; /* ตารางเต็ม container */
+}
+
 @media (min-width: 340px) and (max-width: 768px) {
-    /* Adjust widths for smaller screens */
-    .w-full {
-        width: 100% !important;
-    }
-
-    .h-full {
-        height: auto !important; /* Adjust the height to auto for smaller screens */
-    }
-
-    .h-10 {
-        height: 40px !important; /* Apply fixed height for elements with h-10 */
-    }
-
-    .text-3xl {
-        font-size: 1.5rem !important;
-    }
-
-    .md\:text-2xl {
-        font-size: 1.25rem !important;
-    }
-
-    .space-x-14 {
-        gap: 1rem;
-    }
-
-    table {
-        width: 100% !important;
-    }
-
     th, td {
         padding: 10px !important;
         font-size: 0.875rem !important;
     }
 
-    .bg-lime-500 {
-        background-color: #84cc16 !important;
-    }
-
     .text-white {
         font-size: 1.25rem !important;
+    }
+    
+    .responsive-container {
+        gap: 1rem; /* ลดระยะห่างสำหรับหน้าจอเล็ก */
+    }
+
+    .responsive-heading {
+        font-size: 1rem !important; /* ลดขนาดตัวอักษรของ <h2> */
+        margin-bottom: 0; /* ลบระยะห่างด้านล่าง */
+    }
+
+    .responsive-select {
+        font-size: 0.875rem; /* ลดขนาดฟอนต์ของ <select> */
+        padding: 0.5rem; /* ปรับ padding */
     }
 }
 </style>
