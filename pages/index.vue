@@ -1,11 +1,40 @@
 <script setup>
-  import { ref, onMounted, onUnmounted } from 'vue';
+  import { ref, onMounted, onUnmounted, watch } from 'vue';
+
+  // นำเข้า Firebase
+  import { initializeApp } from 'firebase/app';
+  import { getFirestore, doc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
+
+  // ตั้งค่า Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+    authDomain: "checklogin-67a92.firebaseapp.com",
+    projectId: "checklogin-67a92",
+    storageBucket: "checklogin-67a92.appspot.com",
+    messagingSenderId: "246538906966",
+    appId: "1:246538906966:web:2e4399caaa96210df23af7",
+    measurementId: "G-X3068LRCWT",
+  };
+
+  // Initialize Firebase และ Firestore
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
   // Import images
   import iconPath from '~/assets/images/icon_durian.png';
   import iconPath8 from '~/assets/images/smart_pic_use3.png';
   
   const dynamicImage = 'https://robotoops.com/imagesMydurian/forindex/temp-dashboard.jfif';
+
+  const Overallimages = 'https://www.robotoops.com/imagesMydurian/forindex/overall.jpg';
+
+  const pins = ref([]); // Map pins
+  const poles = ref(1); // จำนวน pins (รับจาก Firestore)
+  const isDragging = ref(null); // ตรวจสอบว่ากำลังลาก pin ไหน
+  const mapPins = ref([]);
+  const tooltipId = ref(null); // ID ของ tooltip ที่แสดง
+  const tooltipStyle = ref({}); // Style ของ tooltip
+  const mapImage = ref(null); // อ้างอิง map element
 
   const imageUrls = {
     Dashboard: 'https://robotoops.com/imagesMydurian/forindex/temp-dashboard.jfif',
@@ -18,6 +47,76 @@
   const changeSlide = () => {
     currentSlide.value = (currentSlide.value + 1) % totalSlides;
   };
+
+  const adminPins = ref([]);
+
+  // โหลด admin pins
+  const loadAdminPins = async () => {
+      try {
+          const usersRef = collection(db, 'users');
+          const adminQuery = query(usersRef, where('status', '==', 'admin'));
+          const querySnapshot = await getDocs(adminQuery);
+
+          const pins = [];
+          
+          for (const adminDoc of querySnapshot.docs) {
+              const adminData = adminDoc.data();
+              const fields = Object.keys(adminData);
+              
+              // หา coordinate fields
+              const coordinateFields = fields.filter(field => 
+                  field.startsWith('coordinate_x_') || field.startsWith('coordinate_y_')
+              );
+
+              // จัดกลุ่มพิกัดตามชื่อสถานที่
+              const locations = new Set(
+                  coordinateFields.map(field => {
+                      const match = field.match(/coordinate_[xy]_(.+)/);
+                      return match ? match[1] : null;
+                  }).filter(Boolean)
+              );
+
+              // สร้าง pin objects
+              for (const location of locations) {
+                  const [locationName, poleNumber] = location.split('_');
+                  pins.push({
+                      id: location,
+                      x: adminData[`coordinate_x_${location}`] || 50,
+                      y: adminData[`coordinate_y_${location}`] || 50,
+                      locationName: locationName,
+                      poleNumber: poleNumber
+                  });
+              }
+          }
+
+          adminPins.value = pins;
+          console.log('Loaded admin pins:', adminPins.value);
+      } catch (error) {
+          console.error('Error loading admin pins:', error);
+      }
+  };
+
+  // แสดง tooltip
+  const showTooltip = (pin) => {
+    tooltipId.value = pin.id;
+    tooltipStyle.value = {
+        position: 'absolute',
+        top: `${pin.y}%`,
+        left: `${pin.x}%`,
+        transform: 'translate(-50%, -120%)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        color: 'white',
+        padding: '5px 10px',
+        borderRadius: '4px',
+        zIndex: 1000,
+        pointerEvents: 'none'
+    };
+};
+
+  // โหลดข้อมูลเมื่อ component ถูก mount
+  onMounted(() => {
+      loadAdminPins();
+  });
 
   onMounted(() => {
     const interval = setInterval(changeSlide, 5000);
@@ -88,7 +187,7 @@
   </section>
 
   <!-- Enhanced Features Section -->
-  <section class="bg-black/80 py-24 px-8 md:px-20">
+  <!-- <section class="bg-black/80 py-24 px-8 md:px-20">
     <div class="flex flex-col md:flex-row justify-between items-center gap-12">
       <div class="md:w-7/12">
         <h2 class="text-3xl md:text-5xl text-white font-bold mb-8">
@@ -106,13 +205,13 @@
         <img :src="iconPath7" class="h-32 hover:scale-110 transition-transform" alt="Smart Farmer" />
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Enhanced Benefits Section -->
-  <section class="py-24 px-8 md:px-20 bg-gradient-to-b from-black/50 to-gray-900/50">
+  <section class="py-24 px-8 md:px-20 bg-black/80">
     <div class="flex flex-col md:flex-row justify-between gap-16">
       <div class="md:w-1/2 space-y-8">
-        <h2 class="text-5xl font-bold text-white">Benefits</h2>
+        <h2 class="text-5xl font-bold text-lime-400">Benefits</h2>
         <div class="space-y-6">
           <p class="text-xl text-gray-300 leading-relaxed">
             Users, after registering as members can view real-time data
@@ -159,6 +258,43 @@
       </div>
     </div>
   </section>
+
+  <section>
+      <!-- google map iframe overall -->
+      <div class="relative flex flex-col w-full h-1/6 overflow-hidden rounded-lg justify-center items-center pl-12 pr-12">
+          <!-- Map Image -->
+          <img :src="Overallimages" alt="Map Image" class="w-full h-1/6 object-cover rounded-md" />
+
+          <!-- Admin Map Pins -->
+          <div
+              v-for="pin in adminPins"
+              :key="pin.id"
+              class="absolute cursor-pointer"
+              :style="{
+                  top: pin.y + '%',
+                  left: pin.x + '%',
+                  transform: 'translate(-50%, -50%)'
+              }"
+              @mouseover="() => showTooltip(pin)"
+              @mouseleave="hideTooltip"
+          >
+              <img 
+                  src="https://cdn-icons-png.flaticon.com/512/684/684908.png" 
+                  alt="Map Pin" 
+                  class="w-8 h-8"
+              />
+              <!-- Tooltip -->
+              <div 
+                  v-if="tooltipId === pin.id"
+                  class="tooltip"
+                  :style="tooltipStyle"
+              >
+                  <div>Location: {{ pin.locationName }}</div>
+                  <div>Pole: {{ pin.poleNumber }}</div>
+              </div>
+          </div>
+      </div>
+  </section>
 </template>
 
 <style>
@@ -178,5 +314,23 @@
   position: relative;
   overflow: hidden;
   width: 100%;
+}
+
+.map-pin {
+position: absolute;
+cursor: pointer;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -120%);
 }
 </style>
