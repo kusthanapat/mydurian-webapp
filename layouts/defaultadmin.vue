@@ -69,32 +69,35 @@
             <div class="container mx-auto px-8 py-16">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
                     <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Contact</h3>
+                        <h3 class="text-2xl font-bold">ติดต่อ</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">chanin.j@cit.kmutnb.ac.th (ผศ.ดร.ชานินทร์ จูฉิม)</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">supod.k@cit.kmutnb.ac.th (ผศ.ดร.สุพจน์ แก้วกรณ์)</li>
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
                         </ul>
                     </div>
 
                     <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Relevant agencies</h3>
+                        <h3 class="text-2xl font-bold">หน่วยงานที่เกี่ยวข้อง</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">กรมส่งเสริมการเกษตร</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">AIC นนทบุรี</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">คณะวิทยาลัยเทคโนโลยีอุตสาหกรรม</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">สาขาวิศวกรรมแมคคาทรอนิกส์</li>
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
                         </ul>
                     </div>
 
                     <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Location</h3>
+                        <h3 class="text-2xl font-bold">สถานที่</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">1518 ถนน ​ประชา​ราษฎร์​1 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร 10800</li>
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li> -->
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
                         </ul>
                     </div>
                 </div>

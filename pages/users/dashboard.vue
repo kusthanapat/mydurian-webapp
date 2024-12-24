@@ -119,13 +119,13 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} °C`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Temperature'],
+        labels: ['อุณหภูมิ'],
     })
 
     // humi chart
@@ -152,13 +152,13 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Humidity'],
+        labels: ['ความชื้น'],
     })
 
     // pressure chart
@@ -185,13 +185,13 @@
                             let min = 0;
                             let max = 1000;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} hPa`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Pressure'],
+        labels: ['ความดัน'],
     })
 
     // lux chart
@@ -218,13 +218,13 @@
                             let min = 0;
                             let max = 10000;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} lux`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Lux'],
+        labels: ['ความเข้มแสง'],
     })
 
     // st chart
@@ -251,13 +251,13 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} °C`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Soil Temp'],
+        labels: ['อุณหภูมิดิน'],
     })
 
     // sh chart
@@ -284,13 +284,13 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Soil Humidity'],
+        labels: ['ความชื้นดิน'],
     })
 
     // sph chart
@@ -317,7 +317,7 @@
                             let min = 0;
                             let max = 14;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)}`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -348,15 +348,15 @@
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
-                            let max = 20000;
+                            let max = 2;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)}`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Soil Electric'],
+        labels: ['ความเค็ม'],
     })
 
     // sn chart
@@ -381,15 +381,15 @@
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
-                            let max = 1999;
+                            let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Nitrogen'],
+        labels: ['ไนโตรเจน'],
     })
 
     // sp chart
@@ -414,15 +414,15 @@
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
-                            let max = 1999;
+                            let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Phosporus'],
+        labels: ['ฟอสฟอรัส'],
     })
 
     // sk chart
@@ -447,15 +447,15 @@
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
-                            let max = 1999;
+                            let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Potassuim'],
+        labels: ['โพแทสเซียม'],
     })
 
     // wind chart
@@ -482,13 +482,13 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}%`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} km/hr`; // ปรับการแสดงผล
                         }
                     }
                 }
             }
         },
-        labels: ['Wind'],
+        labels: ['ความเร็วลม'],
     })
 </script>
 
@@ -498,7 +498,7 @@
             <!-- Temperature -->
             <div class="temperature flex flex-col w-full md:w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
-                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Temperature</p>
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">อุณหภูมิ</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="tempChart" :series="[seriesData[0]]" height="350" />
@@ -509,7 +509,7 @@
             <!-- Humidity -->
             <div class="humidity flex flex-col w-full md:w-1/2 justify-between items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
-                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Humidity</p>
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">ความชื้น</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="humiChart" :series="[seriesData[1]]" height="350" />
@@ -542,7 +542,7 @@
 
         <div class="flex flex-col w-10/12 justify-center items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
-                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Soil</p>
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">ค่าในดิน</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="sphChart" :series="[seriesData[6]]" height="300" />
@@ -554,7 +554,7 @@
 
         <div class="flex flex-col w-10/12 justify-center items-center bg-slate-500 bg-opacity-20 rounded-lg">
                 <div class="w-full flex justify-start pt-4 pl-6">
-                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">Others</p>
+                    <p class="text-3xl md:text-3xl text-white font-bold mb-2">ค่าอื่นๆ</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="secChart" :series="[seriesData[7]]" height="300" />

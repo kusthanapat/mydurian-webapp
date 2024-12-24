@@ -20,12 +20,12 @@
 
                 <!-- Mobile Menu -->
                 <div v-if="showMenu" class="mobile-menu md:hidden">
-                    <NuxtLink :to="{ path: 'home', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Home</NuxtLink>
-                    <NuxtLink :to="{ path: 'dashboard', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Dashboard</NuxtLink>
-                    <NuxtLink :to="{ path: 'chart', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Chart</NuxtLink>
-                    <NuxtLink :to="{ path: 'database', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">Database</NuxtLink>
+                    <NuxtLink :to="{ path: 'home', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">หน้าแรก</NuxtLink>
+                    <NuxtLink :to="{ path: 'dashboard', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">แดชบอร์ด</NuxtLink>
+                    <NuxtLink :to="{ path: 'chart', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">กราฟ</NuxtLink>
+                    <NuxtLink :to="{ path: 'database', query: { uid } }" class="text-gray-300 hover:text-lime-400 transition-all font-kanit">ดาวน์โหลดข้อมูล</NuxtLink>
                     <NuxtLink to="/" class="px-6 py-2 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all font-kanit">
-                        Logout
+                        ออกจากระบบ
                     </NuxtLink>
                 </div>
 
@@ -34,25 +34,25 @@
                     <NuxtLink 
                         :to="{ path: 'home', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                        Home
+                        หน้าแรก
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                     <NuxtLink 
                         :to="{ path: 'dashboard', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                        Dashboard
+                        แดชบอร์ด
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                     <NuxtLink 
                         :to="{ path: 'chart', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                        Chart
+                        กราฟ
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                     <NuxtLink 
                         :to="{ path: 'database', query: { uid } }" 
                         class="text-gray-300 hover:text-lime-400 transition-all relative group font-kanit">
-                        Database
+                        ดาวน์โหลดข้อมูล
                         <span class="absolute bottom-0 left-0 w-full h-0.5 bg-lime-400 transform scale-x-0 group-hover:scale-x-100 transition-transform"></span>
                     </NuxtLink>
                 </div>
@@ -60,7 +60,7 @@
                 <div class="hidden md:flex space-x-4">
                     <NuxtLink to="/"
                         class="px-6 py-2 text-gray-300 hover:text-white border border-transparent hover:border-lime-400 rounded-lg transition-all font-kanit">
-                        Logout
+                        ออกจากระบบ
                     </NuxtLink>
                 </div>
             </div>
@@ -76,32 +76,37 @@
             <div class="container mx-auto px-8 py-16">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
                     <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Contact</h3>
+                        <h3 class="text-2xl font-bold">ติดต่อ</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">chanin.j@cit.kmutnb.ac.th (ผศ.ดร.ชานินทร์ จูฉิม)</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">supod.k@cit.kmutnb.ac.th (ผศ.ดร.สุพจน์ แก้วกรณ์)</li>
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
                         </ul>
                     </div>
 
                     <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Relevant agencies</h3>
+                        <h3 class="text-2xl font-bold">หน่วยงานที่เกี่ยวข้อง</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">กรมส่งเสริมการเกษตร</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">AIC นนทบุรี</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">คณะวิทยาลัยเทคโนโลยีอุตสาหกรรม</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">สาขาวิศวกรรมแมคคาทรอนิกส์</li>
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
                             <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
                         </ul>
                     </div>
 
                     <div class="space-y-6">
-                        <h3 class="text-2xl font-bold">Location</h3>
+                        <h3 class="text-2xl font-bold">สถานที่</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Ko</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">1518 ถนน ​ประชา​ราษฎร์​1 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร 10800</li>
+                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Aj Min</li>
+                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
                         </ul>
                     </div>
                 </div>

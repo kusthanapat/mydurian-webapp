@@ -92,24 +92,24 @@
 
     // Series Data
     const seriesDataTemp = ref([
-        { name: 'Temperature', data: [] },
-        { name: 'Soil Temp', data: [] }
+        { name: 'อุณหภูมิ', data: [] },
+        { name: 'อุณหภูมิดิน', data: [] }
     ]);
     const seriesDataHumi = ref([
-        { name: 'Humidity', data: [] },
-        { name: 'Soil Humidity', data: [] }
+        { name: 'ความชื้น', data: [] },
+        { name: 'ความชื้นดิน', data: [] }
     ]);
     const seriesDataMatters = ref([
-        { name: 'Nitrogen', data: [] },
-        { name: 'Phosphorus', data: [] },
-        { name: 'Potassium', data: [] }
+        { name: 'ไนโตรเจน', data: [] },
+        { name: 'ฟอสฟอรัส', data: [] },
+        { name: 'โพแทสเซียม', data: [] }
     ]);
     const seriesDataPH = ref([{ name: 'PH', data: [] }]);
-    const seriesDataSEC = ref([{ name: 'Electric', data: [] }]);
+    const seriesDataSEC = ref([{ name: 'ความเค็ม', data: [] }]);
     const seriesDataOthers = ref([
-        { name: 'Lux', data: [] },
-        { name: 'Pressure', data: [] },
-        { name: 'Wind', data: [] }
+        { name: 'ความเข้มแสง', data: [] },
+        { name: 'แรงดัน', data: [] },
+        { name: 'ความเร็วลม', data: [] }
     ]);
 
     async function fetchGoogleSheetURL() {
@@ -254,35 +254,35 @@
         <div class="button-container flex space-x-5 items-baseline w-full justify-center">
             <button @click="fetchDataAndCreateChartsByOffset(currentDayOffset++)"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Previous Day
+                วันก่อนหน้า
             </button>
             <button @click="fetchDataAndCreateCharts7days"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Previous Week
+                อาทิตย์ก่อนหน้า
             </button>
             <button @click="fetchDataAndCreateCharts30Days"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Previous Month
+                เดือนก่อนหน้า
             </button>
             <button @click="fetchDataAndCreateChartsCurrentMonth"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Current Month
+                เดือนปัจจุบัน
             </button>
             <button @click="fetchDataAndCreateCharts"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Current Day
+                วันปัจจุบัน
             </button>
             <button @click="currentDayOffset > 0 ? fetchDataAndCreateChartsByOffset(--currentDayOffset) : null"
                 class="px-4 py-1 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Next Day
+                วันถัดไป
             </button>
         </div>
         
         <!-- Chart สำหรับ Temperature และ Soil Temp -->
         <div v-if="seriesDataTemp[0].data.length > 0" class="chart-container space-y-5">
             <div class="flex space-x-5 items-baseline">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">Temperature Chart</h2>
-                <p class="text-xl text-gray-300 leading-relaxed">Date: {{ displayDate }}</p>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">กราฟอุณหภูมิ</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">วันที่: {{ displayDate }}</p>
             </div>
             <client-only>
                 <apexchart type="line" :options="chartOptions" :series="seriesDataTemp" height="350" />
@@ -292,8 +292,8 @@
         <!-- Chart สำหรับ Humidity และ Soil Humidity -->
         <div v-if="seriesDataHumi[0].data.length > 0" class="chart-container space-y-5">
             <div class="flex space-x-5 items-baseline">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">Humidity Chart</h2>
-                <p class="text-xl text-gray-300 leading-relaxed">Date: {{ displayDate }}</p>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">กราฟความชื้น</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">วันที่: {{ displayDate }}</p>
             </div>
             <client-only>
                 <apexchart type="line" :options="chartOptions" :series="seriesDataHumi" height="350" />
@@ -303,8 +303,8 @@
         <!-- Chart สำหรับ Soil Matters -->
         <div v-if="seriesDataMatters[0].data.length > 0" class="chart-container space-y-5">
             <div class="flex space-x-5 items-baseline">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">Soil Matters Chart</h2>
-                <p class="text-xl text-gray-300 leading-relaxed">Date: {{ displayDate }}</p>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">กราฟค่าสารในดิน</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">วันที่: {{ displayDate }}</p>
             </div>
             <client-only>
                 <apexchart type="line" :options="chartOptions" :series="seriesDataMatters" height="350" />
@@ -314,8 +314,8 @@
         <!-- Chart สำหรับ PH -->
         <div v-if="seriesDataPH[0].data.length > 0" class="chart-container space-y-5">
             <div class="flex space-x-5 items-baseline">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">PH Chart</h2>
-                <p class="text-xl text-gray-300 leading-relaxed">Date: {{ displayDate }}</p>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">กราฟค่า PH</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">วันที่: {{ displayDate }}</p>
             </div>
             <client-only>
                 <apexchart type="line" :options="chartOptions" :series="seriesDataPH" height="350" />
@@ -325,8 +325,8 @@
         <!-- Chart สำหรับ SEC -->
         <div v-if="seriesDataSEC[0].data.length > 0" class="chart-container space-y-5">
             <div class="flex space-x-5 items-baseline">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">Soil Electric Chart</h2>
-                <p class="text-xl text-gray-300 leading-relaxed">Date: {{ displayDate }}</p>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">กราฟค่าความเค็ม</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">วันที่: {{ displayDate }}</p>
             </div>
             <client-only>
                 <apexchart type="line" :options="chartOptions" :series="seriesDataSEC" height="350" />
@@ -336,8 +336,8 @@
         <!-- Chart Others -->
         <div v-if="seriesDataOthers[0].data.length > 0" class="chart-container space-y-5">
             <div class="flex space-x-5 items-baseline">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">Other Data Chart</h2>
-                <p class="text-xl text-gray-300 leading-relaxed">Date: {{ displayDate }}</p>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8">กราฟค่าอื่นๆ</h2>
+                <p class="text-xl text-gray-300 leading-relaxed">วันที่: {{ displayDate }}</p>
             </div>
             <client-only>
                 <apexchart type="line" :options="chartOptions" :series="seriesDataOthers" height="350" />

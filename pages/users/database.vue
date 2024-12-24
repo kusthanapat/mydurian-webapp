@@ -8,7 +8,6 @@
         layout: "defaultuser"
     });
 
-    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
         authDomain: "checklogin-67a92.firebaseapp.com",
@@ -19,7 +18,6 @@
         measurementId: "G-X3068LRCWT"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
@@ -33,7 +31,6 @@
     const selectedData = ref('');
     const usersData = ref([]);
 
-    // Fetch Google Sheet URL from Firebase
     async function fetchGoogleSheetURL() {
         try {
             const docRef = doc(db, 'users', uid);
@@ -41,7 +38,8 @@
             if (docSnap.exists()) {
                 googleSheetURL.value = docSnap.data().googleSheet;
                 console.log('Google Sheet URL:', googleSheetURL.value);
-                selectData(); // Call data processing after URL is fetched
+                await selectData();
+                setLatestMonth(); // Set default month after data is loaded
             } else {
                 console.error('No such document!');
             }
@@ -50,14 +48,13 @@
         }
     }
 
-    // Populate data options and filter data by month/year
     function selectData() {
         if (!googleSheetURL.value) {
             console.error('Google Sheet URL is not set');
             return;
         }
 
-        fetch(googleSheetURL.value)
+        return fetch(googleSheetURL.value)
             .then(response => response.json())
             .then(data => {
                 console.log('Fetched data:', data);
@@ -91,14 +88,17 @@
                             value: monthYear,
                             text: `${monthNames[parseInt(month) - 1]} ${year}`
                         };
-                    });
-
-                    console.log('Data options:', dataOptions.value);
+                    }).sort((a, b) => b.value.localeCompare(a.value)); // Sort in descending order
                 }
             });
     }
 
-    // Filter and display table data based on selected month/year
+    function setLatestMonth() {
+        if (dataOptions.value.length > 0) {
+            selectedData.value = dataOptions.value[0].value; // Select first (latest) month
+        }
+    }
+
     function updateTableData(selectedValue, allData) {
         const [month, year] = selectedValue.split('-');
         usersData.value = allData.filter(row => {
@@ -107,7 +107,6 @@
         });
     }
 
-    // Watch for changes in selected data
     watch(selectedData, (newVal) => {
         if (newVal && googleSheetURL.value) {
             fetch(googleSheetURL.value)
@@ -118,7 +117,6 @@
         }
     });
 
-    // Simulate CSV download
     function downloadCSV() {
         const csvRows = [];
         const headers = Object.keys(usersData.value[0] || {}).join(',');
@@ -138,7 +136,6 @@
         a.click();
     }
 
-    // Fetch the Google Sheet URL when the page is mounted
     onMounted(() => {
         fetchGoogleSheetURL();
     });
@@ -146,12 +143,10 @@
 
 <template>
     <div class="h-full w-full pr-28 pl-28 space-y-16 pt-20">
-        <!-- Dropdown for selecting data -->
         <div class="w-full flex space-x-14 items-baseline">
             <div class="w-full flex items-baseline responsive-container">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8 responsive-heading">Select Data:</h2>
+                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8 responsive-heading">เลือกข้อมูล:</h2>
                 <select v-model="selectedData" class="w-full h-full px-4 py-3 rounded-lg bg-slate-200 text-gray-500 border border-none responsive-select">
-                    <option disabled value="">Select Data</option>
                     <option v-for="option in dataOptions" :key="option.value" :value="option.value">
                         {{ option.text }}
                     </option>
@@ -159,29 +154,28 @@
             </div>
             <button @click="downloadCSV"
                 class="px-4 py-1 w-full h-full bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
-                Download Data
+                ดาวน์โหลดข้อมูล
             </button>
         </div>
 
-        <!-- Scrollable Table Container -->
         <div class="table-container bg-white p-4 rounded-lg shadow-lg overflow-x-auto" :style="{ height: 'auto' }">
             <table class="custom-table min-w-full border border-gray-800 border-collapse rounded-lg overflow-hidden shadow-md">
                 <thead>
                     <tr class="bg-gray-200">
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Time</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Temp</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Humi</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Pressure</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Lux</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Foat</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Soil Temp</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Soil Humi</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">วันที่</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">อุณหภูมิ</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความชื้น</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">แรงดัน</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเข้มแสง</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ลูกลอย</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">อุณหภูมิดิน</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความชื้นดิน</th>
                         <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">PH</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Soil EC</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">N</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">P</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">K</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">Wind</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเค็ม</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ไนโตรเจน</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ฟอสฟอรัส</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">โพแทสเซียม</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเร็วลม</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -209,12 +203,12 @@
 
 <style scoped>
 .table-container {
-    width: 90%; /* กว้าง 90% */
-    margin: 0 auto; /* จัดกึ่งกลางหน้าจอ */
+    width: 90%;
+    margin: 0 auto;
 }
 
 .custom-table {
-    width: 100%; /* ตารางเต็ม container */
+    width: 100%;
 }
 
 @media (min-width: 340px) and (max-width: 768px) {
@@ -228,17 +222,17 @@
     }
     
     .responsive-container {
-        gap: 1rem; /* ลดระยะห่างสำหรับหน้าจอเล็ก */
+        gap: 1rem;
     }
 
     .responsive-heading {
-        font-size: 1rem !important; /* ลดขนาดตัวอักษรของ <h2> */
-        margin-bottom: 0; /* ลบระยะห่างด้านล่าง */
+        font-size: 1rem !important;
+        margin-bottom: 0;
     }
 
     .responsive-select {
-        font-size: 0.875rem; /* ลดขนาดฟอนต์ของ <select> */
-        padding: 0.5rem; /* ปรับ padding */
+        font-size: 0.875rem;
+        padding: 0.5rem;
     }
 }
 </style>
