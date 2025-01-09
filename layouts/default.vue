@@ -85,16 +85,66 @@
                         </ul>
                     </div>
 
+                    <!-- <div class="space-y-6">
+                        <h3 class="text-2xl font-bold">หน่วยงานที่เกี่ยวข้อง</h3>
+                        <hr class="border-lime-500/30 w-24" />
+                        <ul class="space-y-4">
+                            <nuxt-link to="https://www.doae.go.th/" class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">กรมส่งเสริมการเกษตร</nuxt-link>
+                            <nuxt-link to="https://aic-info.moac.go.th/aic/newsdetail.php?way=PT1nYmxkM2M=&news=PUl6TQ==" class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">AIC นนทบุรี</nuxt-link>
+                            <nuxt-link to="https://www.kmutnb.ac.th/" class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</nuxt-link>
+                            <nuxt-link to="https://cit.kmutnb.ac.th/" class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">คณะวิทยาลัยเทคโนโลยีอุตสาหกรรม</nuxt-link>
+                            <nuxt-link to="https://cit.kmutnb.ac.th/%E0%B8%AA%E0%B8%B2%E0%B8%82%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B9%81%E0%B8%A1%E0%B8%84%E0%B8%84%E0%B8%B2-2/" class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">สาขาวิศวกรรมแมคคาทรอนิกส์</nuxt-link>
+                        </ul>
+                    </div> -->
                     <div class="space-y-6">
                         <h3 class="text-2xl font-bold">หน่วยงานที่เกี่ยวข้อง</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">กรมส่งเสริมการเกษตร</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">AIC นนทบุรี</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">คณะวิทยาลัยเทคโนโลยีอุตสาหกรรม</li>
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">สาขาวิศวกรรมแมคคาทรอนิกส์</li>
-                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
+                            <li>
+                                <a 
+                                    href="https://www.doae.go.th/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">
+                                    กรมส่งเสริมการเกษตร
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    href="https://aic-info.moac.go.th/aic/newsdetail.php?way=PT1nYmxkM2M=&news=PUl6TQ==" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">
+                                    AIC นนทบุรี
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    href="https://www.kmutnb.ac.th/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">
+                                    มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    href="https://cit.kmutnb.ac.th/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">
+                                    คณะวิทยาลัยเทคโนโลยีอุตสาหกรรม
+                                </a>
+                            </li>
+                            <li>
+                                <a 
+                                    href="https://cit.kmutnb.ac.th/%E0%B8%AA%E0%B8%B2%E0%B8%82%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B9%81%E0%B8%A1%E0%B8%84%E0%B8%84%E0%B8%B2-2/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">
+                                    สาขาวิศวกรรมแมคคาทรอนิกส์
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
@@ -102,9 +152,15 @@
                         <h3 class="text-2xl font-bold">สถานที่</h3>
                         <hr class="border-lime-500/30 w-24" />
                         <ul class="space-y-4">
-                            <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">1518 ถนน ​ประชา​ราษฎร์​1 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร 10800</li>
-                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">ผศ.ดร.สุพจน์ แก้วกรณ์</li> -->
-                            <!-- <li class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">Kus</li> -->
+                            <li>
+                                <a 
+                                    href="https://www.google.com/maps/place/%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%99%E0%B8%84%E0%B8%A3%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B7%E0%B8%AD/@13.819137,100.5117129,17z/data=!3m1!4b1!4m6!3m5!1s0x30e29b877800c9af:0xd754c571fc7177b!8m2!3d13.819137!4d100.5142878!16zL20vMDgxZDc2?entry=ttu&g_ep=EgoyMDI1MDEwNy4wIKXMDSoASAFQAw%3D%3D"
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    class="text-gray-300 hover:text-lime-400 transition-colors cursor-pointer">
+                                    1518 ถนน ​ประชา​ราษฎร์​1 แขวงวงศ์สว่าง เขตบางซื่อ กรุงเทพมหานคร 10800
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
