@@ -142,18 +142,18 @@ async function fetchDataAndCreateCharts() {
 function updateChartData(filteredData, date) {
     displayDate.value = date.toDateString();
 
-    seriesDataTemp.value[0].data = filteredData.map(row => row.Temperature ? parseFloat(row.Temperature).toFixed(1) : 0);
-    seriesDataTemp.value[1].data = filteredData.map(row => row.ST ? parseFloat(row.ST).toFixed(1) : 0);
-    seriesDataHumi.value[0].data = filteredData.map(row => row.Humidity ? parseFloat(row.Humidity).toFixed(1) : 0);
-    seriesDataHumi.value[1].data = filteredData.map(row => row.SH ? parseFloat(row.SH).toFixed(1) : 0);
-    seriesDataMatters.value[0].data = filteredData.map(row => row.SN ? parseFloat(row.SN).toFixed(1) : 0);
-    seriesDataMatters.value[1].data = filteredData.map(row => row.SP ? parseFloat(row.SP).toFixed(1) : 0);
-    seriesDataMatters.value[2].data = filteredData.map(row => row.SK ? parseFloat(row.SK).toFixed(1) : 0);
-    seriesDataPH.value[0].data = filteredData.map(row => row.SPH ? parseFloat(row.SPH).toFixed(1) : 0);
-    seriesDataSEC.value[0].data = filteredData.map(row => row.SEC ? parseFloat(row.SEC).toFixed(1) : 0);
-    seriesDataOthers.value[0].data = filteredData.map(row => row.Lux ? parseFloat(row.Lux).toFixed(1) : 0);
-    seriesDataOthers.value[1].data = filteredData.map(row => row.Pressure ? parseFloat(row.Pressure).toFixed(1) : 0);
-    seriesDataOthers.value[2].data = filteredData.map(row => row.Wind ? parseFloat(row.Wind).toFixed(1) : 0);
+    seriesDataTemp.value[0].data = filteredData.map(row => row.อุณหภูมิ_เซลเซียส ? parseFloat(row.อุณหภูมิ_เซลเซียส).toFixed(1) : 0);
+    seriesDataTemp.value[1].data = filteredData.map(row => row.อุณหภูมิดิน_เซลเซียส ? parseFloat(row.อุณหภูมิดิน_เซลเซียส).toFixed(1) : 0);
+    seriesDataHumi.value[0].data = filteredData.map(row => row.ความชื้น_เปอร์เซ็นต์ ? parseFloat(row.ความชื้น_เปอร์เซ็นต์).toFixed(1) : 0);
+    seriesDataHumi.value[1].data = filteredData.map(row => row.ความชื้นดิน_เปอร์เซ็นต์ ? parseFloat(row.ความชื้นดิน_เปอร์เซ็นต์).toFixed(1) : 0);
+    seriesDataMatters.value[0].data = filteredData.map(row => row.ไนโตรเจน_เปอร์เซ็นต์ ? parseFloat(row.ไนโตรเจน_เปอร์เซ็นต์).toFixed(1) : 0);
+    seriesDataMatters.value[1].data = filteredData.map(row => row.ฟอสฟอรัส_เปอร์เซ็นต์ ? parseFloat(row.ฟอสฟอรัส_เปอร์เซ็นต์).toFixed(1) : 0);
+    seriesDataMatters.value[2].data = filteredData.map(row => row.โพแทสเซียม_เปอร์เซ็นต์ ? parseFloat(row.โพแทสเซียม_เปอร์เซ็นต์).toFixed(1) : 0);
+    seriesDataPH.value[0].data = filteredData.map(row => row.PH ? parseFloat(row.PH).toFixed(1) : 0);
+    seriesDataSEC.value[0].data = filteredData.map(row => row.ความเค็ม_เปอร์เซ็นต์ ? parseFloat(row.ความเค็ม_เปอร์เซ็นต์).toFixed(1) : 0);
+    seriesDataOthers.value[0].data = filteredData.map(row => row.ความเข้มแสง_lux ? parseFloat(row.ความเข้มแสง_lux).toFixed(1) : 0);
+    seriesDataOthers.value[1].data = filteredData.map(row => row.แรงดัน_hPa ? parseFloat(row.แรงดัน_hPa).toFixed(1) : 0);
+    seriesDataOthers.value[2].data = filteredData.map(row => row.ความเร็วลม_เมตรต่อวินาที ? parseFloat(row.ความเร็วลม_เมตรต่อวินาที).toFixed(1) : 0);
 
     chartOptions.value.xaxis.categories = filteredData.map(row => {
         let date = new Date(row.TimeStamp);

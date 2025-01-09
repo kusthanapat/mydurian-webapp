@@ -63,14 +63,21 @@
                     const availableMonths = [];
                     data.forEach(row => {
                         console.log('Row TimeStamp:', row.TimeStamp);
-
-                        const date = new Date(row.TimeStamp);
+                        
+                        // แยกวันที่และเวลา
+                        const [datePart] = row.TimeStamp.split(',');
+                        // แยกส่วนประกอบของวันที่ (เดือน/วัน/ปี)
+                        const [month, day, year] = datePart.trim().split('/');
+                        
+                        // สร้าง Date object โดยใช้รูปแบบที่ถูกต้อง
+                        const date = new Date(year, parseInt(month) - 1, day);
+                        
                         if (isNaN(date.getTime())) {
                             console.error('Invalid Date:', row.TimeStamp);
                         } else {
-                            const month = String(date.getMonth() + 1).padStart(2, '0');
-                            const year = date.getFullYear();
-                            const monthYear = `${month}-${year}`;
+                            const monthStr = String(date.getMonth() + 1).padStart(2, '0');
+                            const yearStr = date.getFullYear();
+                            const monthYear = `${monthStr}-${yearStr}`;
 
                             if (!availableMonths.includes(monthYear)) {
                                 availableMonths.push(monthYear);
@@ -88,7 +95,7 @@
                             value: monthYear,
                             text: `${monthNames[parseInt(month) - 1]} ${year}`
                         };
-                    }).sort((a, b) => b.value.localeCompare(a.value)); // Sort in descending order
+                    }).sort((a, b) => b.value.localeCompare(a.value));
                 }
             });
     }
@@ -163,37 +170,37 @@
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">วันที่</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">อุณหภูมิ</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความชื้น</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">แรงดัน</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเข้มแสง</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">อุณหภูมิ (°C)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">อุณหภูมิดิน (°C)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความชื้น (%)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความชื้นดิน (%)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">แรงดัน (hPa)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเข้มแสง (lux)</th>
                         <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ลูกลอย</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">อุณหภูมิดิน</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความชื้นดิน</th>
                         <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">PH</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเค็ม</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ไนโตรเจน</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ฟอสฟอรัส</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">โพแทสเซียม</th>
-                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเร็วลม</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเค็ม (%)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ไนโตรเจน (%)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ฟอสฟอรัส (%)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">โพแทสเซียม (%)</th>
+                        <th class="px-4 py-2 border border-gray-300 text-left text-gray-600 font-medium">ความเร็วลม (km/hr)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(user, index) in usersData" :key="index" class="bg-white hover:bg-gray-100">
                         <td class="px-4 py-2 border border-gray-300">{{ user.TimeStamp }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.Temperature }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.Humidity }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.Pressure }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.Lux }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.Foat }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.ST }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.SH }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.SPH }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.SEC }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.SN }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.SP }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.SK }}</td>
-                        <td class="px-4 py-2 border border-gray-300">{{ user.Wind }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.อุณหภูมิ_c }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.อุณหภูมิดิน_c }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ความชื้น_เปอร์เซ็นต์ }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ความชื้นดิน_เปอร์เซ็นต์ }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.แรงดัน_hPa }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ความเข้มแสง_lux }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ลูกลอย }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.PH }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ความเค็ม_เปอร์เซ็นต์ }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ไนโตรเจน_เปอร์เซ็นต์ }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ฟอสฟอรัส_เปอร์เซ็นต์ }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.โพแทสเซียม_เปอร์เซ็นต์ }}</td>
+                        <td class="px-4 py-2 border border-gray-300">{{ user.ความเร็วลม_กิโลเมตรต่อชั่วโมง }}</td>
                     </tr>
                 </tbody>
             </table>

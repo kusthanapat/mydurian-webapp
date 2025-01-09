@@ -71,31 +71,31 @@ const navigateTo = (path) => {
     if (!sensorData) return { url: happyface, color: '#23ff00' };  // สีเขียว
 
     // Temperature conditions
-    if (sensorData.Temperature >= 40) return { url: sadface, color: '#ff0000' };  // สีแดง
-    if (sensorData.Temperature >= 35) return { url: neutralface, color: '#fff300' };  // สีเหลือง
+    if (sensorData.อุณหภูมิ_เซลเซียส >= 40) return { url: sadface, color: '#ff0000' };  // สีแดง
+    if (sensorData.อุณหภูมิ_เซลเซียส >= 35) return { url: neutralface, color: '#fff300' };  // สีเหลือง
 
     // Humidity conditions
-    if (sensorData.Humidity <= 60 || sensorData.Humidity >= 80) return { url: sadface, color: '#ff0000' };
-    if (sensorData.Humidity <= 55 || sensorData.Humidity >= 75) return { url: neutralface, color: '#fff300' };
+    if (sensorData.ความชื้น_เปอร์เซ็นต์ <= 60 || sensorData.ความชื้น_เปอร์เซ็นต์ >= 80) return { url: sadface, color: '#ff0000' };
+    if (sensorData.ความชื้น_เปอร์เซ็นต์ <= 55 || sensorData.ความชื้น_เปอร์เซ็นต์ >= 75) return { url: neutralface, color: '#fff300' };
 
     // Soil Humidity conditions
-    if (sensorData.SH <= 20 || sensorData.SH >= 40) return { url: sadface, color: '#ff0000' };
-    if (sensorData.SH <= 25 || sensorData.SH >= 45) return { url: neutralface, color: '#fff300' };
+    if (sensorData.ความชื้นดิน_เปอร์เซ็นต์ <= 20 || sensorData.ความชื้นดิน_เปอร์เซ็นต์ >= 40) return { url: sadface, color: '#ff0000' };
+    if (sensorData.ความชื้นดิน_เปอร์เซ็นต์ <= 25 || sensorData.ความชื้นดิน_เปอร์เซ็นต์ >= 45) return { url: neutralface, color: '#fff300' };
 
     // Soil Temperature conditions
-    if (sensorData.ST >= 35) return { url: sadface, color: '#ff0000' };
-    if (sensorData.ST >= 30) return { url: neutralface, color: '#fff300' };
+    if (sensorData.อุณหภูมิดิน_เซลเซียส >= 35) return { url: sadface, color: '#ff0000' };
+    if (sensorData.อุณหภูมิดิน_เซลเซียส >= 30) return { url: neutralface, color: '#fff300' };
 
     // Soil pH conditions
-    if (sensorData.SPH >= 8) return { url: sadface, color: '#ff0000' };
-    if (sensorData.SPH >= 7) return { url: neutralface, color: '#fff300' };
+    if (sensorData.PH >= 8) return { url: sadface, color: '#ff0000' };
+    if (sensorData.PH >= 7) return { url: neutralface, color: '#fff300' };
 
     // Soil EC conditions
-    if (sensorData.SEC >= 1.2) return { url: sadface, color: '#ff0000' };
-    if (sensorData.SEC >= 1) return { url: neutralface, color: '#fff300' };
+    if (sensorData.ความเค็ม_เปอร์เซ็นต์ >= 1.2) return { url: sadface, color: '#ff0000' };
+    if (sensorData.ความเค็ม_เปอร์เซ็นต์ >= 1) return { url: neutralface, color: '#fff300' };
 
     // Soil Nutrients conditions
-    const nutrients = ['SN', 'SP', 'SK'];
+    const nutrients = ['ไนโตรเจน_เปอร์เซ็นต์', 'ฟอสฟอรัส_เปอร์เซ็นต์', 'โพแทสเซียม_เปอร์เซ็นต์'];
     for (const nutrient of nutrients) {
       if (sensorData[nutrient] >= 15) return { url: sadface, color: '#ff0000' };
       if (sensorData[nutrient] >= 12) return { url: neutralface, color: '#fff300' };
@@ -109,25 +109,25 @@ const checkAlerts = (data) => {
     let warnings = 0;
     let errors = 0;
     
-    if (data.Temperature >= 40) errors++;
-    else if (data.Temperature >= 35) warnings++;
+    if (data.อุณหภูมิ_เซลเซียส >= 40) errors++;
+    else if (data.อุณหภูมิ_เซลเซียส >= 35) warnings++;
     
-    if (data.Humidity <= 60 || data.Humidity >= 80) errors++;
-    else if (data.Humidity <= 55 || data.Humidity >= 75) warnings++;
+    if (data.ความชื้น_เปอร์เซ็นต์ <= 60 || data.ความชื้น_เปอร์เซ็นต์ >= 80) errors++;
+    else if (data.ความชื้น_เปอร์เซ็นต์ <= 55 || data.ความชื้น_เปอร์เซ็นต์ >= 75) warnings++;
     
-    if (data.SH <= 20 || data.SH >= 40) errors++;
-    else if (data.SH <= 25 || data.SH >= 45) warnings++;
+    if (data.ความชื้นดิน_เปอร์เซ็นต์ <= 20 || data.ความชื้นดิน_เปอร์เซ็นต์ >= 40) errors++;
+    else if (data.ความชื้นดิน_เปอร์เซ็นต์ <= 25 || data.ความชื้นดิน_เปอร์เซ็นต์ >= 45) warnings++;
     
-    if (data.ST >= 35) errors++;
-    else if (data.ST >= 30) warnings++;
+    if (data.อุณหภูมิดิน_เซลเซียส >= 35) errors++;
+    else if (data.อุณหภูมิดิน_เซลเซียส >= 30) warnings++;
     
-    if (data.SPH >= 8) errors++;
-    else if (data.SPH >= 7) warnings++;
+    if (data.PH >= 8) errors++;
+    else if (data.PH >= 7) warnings++;
     
-    if (data.SEC >= 1.2) errors++;
-    else if (data.SEC >= 1) warnings++;
+    if (data.ความเค็ม_เปอร์เซ็นต์ >= 1.2) errors++;
+    else if (data.ความเค็ม_เปอร์เซ็นต์ >= 1) warnings++;
     
-    ['SN', 'SP', 'SK'].forEach(nutrient => {
+    ['ไนโตรเจน_เปอร์เซ็นต์', 'ฟอสฟอรัส_เปอร์เซ็นต์', 'โพแทสเซียม_เปอร์เซ็นต์'].forEach(nutrient => {
         if (data[nutrient] >= 15) errors++;
         else if (data[nutrient] >= 12) warnings++;
     });

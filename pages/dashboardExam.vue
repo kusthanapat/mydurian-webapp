@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import VueApexCharts from "vue3-apexcharts";
 
 const app = ref(null);
 const db = ref(null);
@@ -7,10 +8,10 @@ const dataOptions = ref([]);
 const selectedData = ref("");
 const seriesData = ref([]);
 const googleSheetURL = ref('');
-const VueApexCharts = ref(null);
+// const VueApexCharts = ref(null);
 
 // Chart configurations
-const createRadialBarConfig = (label, max = 100, unit = '%') => ({
+const createRadialBarConfig = (label, min = '', max = '', unit = '') => ({
     chart: {
         type: 'radialBar',
         height: 350,
@@ -27,7 +28,8 @@ const createRadialBarConfig = (label, max = 100, unit = '%') => ({
                 },
                 value: {
                     show: true,
-                    fontSize: '16px',
+                    fontSize: '22px',
+                    color: '#ffffff',
                     formatter: function (val) {
                         let normalizedVal = ((val - 0) / (max - 0)) * 100;
                         return `${normalizedVal.toFixed(1)} ${unit}`;
@@ -39,18 +41,52 @@ const createRadialBarConfig = (label, max = 100, unit = '%') => ({
     labels: [label],
 });
 
-const tempChart = ref(createRadialBarConfig('อุณหภูมิ', 100, '°C'));
-const humiChart = ref(createRadialBarConfig('ความชื้น', 100, '%'));
-const luxChart = ref(createRadialBarConfig('ความเข้มแสง', 10000, 'lux'));
-const pressureChart = ref(createRadialBarConfig('แรงดัน', 1000, 'hPa'));
-const stChart = ref(createRadialBarConfig('อุณหภูมิดิน', 100, '°C'));
-const shChart = ref(createRadialBarConfig('ความชื้นดิน', 100, '%'));
-const sphChart = ref(createRadialBarConfig('PH', 14, ''));
-const secChart = ref(createRadialBarConfig('ความเค็ม', 2, ''));
-const snChart = ref(createRadialBarConfig('ไนโตรเจน', 100, '%'));
-const spChart = ref(createRadialBarConfig('ฟอสฟอรัส', 100, '%'));
-const skChart = ref(createRadialBarConfig('โพแทสเซียม', 100, '%'));
-const windChart = ref(createRadialBarConfig('ความเร็วลม', 100, 'km/hr'));
+const sphChart = ref({
+   chart: {
+       type: 'radialBar',
+       height: 350,
+   },
+   plotOptions: {
+       radialBar: {
+           min: 0,
+           max: 100,
+           hollow: {
+               size: '70%',
+           },
+           dataLabels: {
+               name: {
+                   show: true,
+                   fontSize: '22px',
+               },
+               value: {
+                   show: true,
+                   fontSize: '22px',
+                   color: '#ffffff',
+                   formatter: function (val) {
+                       return (val).toFixed(1);
+                   }
+               }
+           }
+       }
+   },
+   labels: ['PH'],
+   series: [function(val) {
+       return (val / 9) * 100;
+   }]
+});
+
+const tempChart = ref(createRadialBarConfig('อุณหภูมิ', 0, 100, '°C'));
+const humiChart = ref(createRadialBarConfig('ความชื้น', 0, 100, '%'));
+const luxChart = ref(createRadialBarConfig('ความเข้มแสง', 0, 10000, 'lux'));
+const pressureChart = ref(createRadialBarConfig('แรงดัน', 0, 1000, 'hPa'));
+const stChart = ref(createRadialBarConfig('อุณหภูมิดิน', 0, 100, '°C'));
+const shChart = ref(createRadialBarConfig('ความชื้นดิน', 0, 100, '%'));
+// const sphChart = ref(createRadialBarConfig('PH', 3, 9, 'unit'));
+const secChart = ref(createRadialBarConfig('ความเค็ม', 0, 2, ''));
+const snChart = ref(createRadialBarConfig('ไนโตรเจน', 0, 100, '%'));
+const spChart = ref(createRadialBarConfig('ฟอสฟอรัส', 0, 100, '%'));
+const skChart = ref(createRadialBarConfig('โพแทสเซียม', 0, 100, '%'));
+const windChart = ref(createRadialBarConfig('ความเร็วลม', 0, 100, 'km/hr'));
 
 onMounted(async () => {
     const { initializeApp } = await import("firebase/app");
@@ -96,6 +132,22 @@ const fetchUserData = async (uid) => {
     }
 };
 
+const columnMapping = {
+    temperature: "อุณหภูมิ_c",
+    soilTemperature: "อุณหภูมิดิน_c",
+    humidity: "ความชื้น_เปอร์เซ็นต์",
+    soilMoisture: "ความชื้นดิน_เปอร์เซ็นต์",
+    pressure: "แรงดัน_hPa",
+    lightIntensity: "ความเข้มแสง_lux",
+    foat: "ลูกลอย",
+    ph: "PH",
+    salinity: "ความเค็ม_เปอร์เซ็นต์",
+    nitrogen: "ไนโตรเจน_เปอร์เซ็นต์",
+    phosphorus: "ฟอสฟอรัส_เปอร์เซ็นต์",
+    potassium: "โพแทสเซียม_เปอร์เซ็นต์",
+    windSpeed: "ความเร็วลม_กิโลเมตรต่อชั่วโมง"
+};
+
 const fetchDataAndCreateCharts = () => {
     if (!googleSheetURL.value) return;
 
@@ -105,18 +157,19 @@ const fetchDataAndCreateCharts = () => {
             if (Array.isArray(data) && data.length > 0) {
                 const latestRow = data[data.length - 1];
                 seriesData.value = [
-                    parseFloat(latestRow.Temperature) || 0,
-                    parseFloat(latestRow.Humidity) || 0,
-                    parseFloat(latestRow.Lux) || 0,
-                    parseFloat(latestRow.Pressure) || 0,
-                    parseFloat(latestRow.ST) || 0,
-                    parseFloat(latestRow.SH) || 0,
-                    parseFloat(latestRow.SPH) || 0,
-                    parseFloat(latestRow.SEC) || 0,
-                    parseFloat(latestRow.SN) || 0,
-                    parseFloat(latestRow.SP) || 0,
-                    parseFloat(latestRow.SK) || 0,
-                    parseFloat(latestRow.Wind) || 0
+                    parseFloat(latestRow[columnMapping.temperature]) || 0,
+                    parseFloat(latestRow[columnMapping.soilTemperature]) || 0,
+                    parseFloat(latestRow[columnMapping.humidity]) || 0,
+                    parseFloat(latestRow[columnMapping.soilMoisture]) || 0,
+                    parseFloat(latestRow[columnMapping.pressure]) || 0,
+                    parseFloat(latestRow[columnMapping.lightIntensity]) || 0,
+                    latestRow[columnMapping.foat],
+                    parseFloat(latestRow[columnMapping.ph]) || 0,
+                    parseFloat(latestRow[columnMapping.salinity]) || 0,
+                    parseFloat(latestRow[columnMapping.nitrogen]) || 0,
+                    parseFloat(latestRow[columnMapping.phosphorus]) || 0,
+                    parseFloat(latestRow[columnMapping.potassium]) || 0,
+                    parseFloat(latestRow[columnMapping.windSpeed]) || 0
                 ];
             }
         })
@@ -153,7 +206,7 @@ definePageMeta({
                         </div>
                         <div class="flex justify-between items-center w-full">
                             <component :is="VueApexCharts" type="radialBar" :options="tempChart" :series="[seriesData[0]]" height="350" />
-                            <component :is="VueApexCharts" type="radialBar" :options="stChart" :series="[seriesData[4]]" height="350" />
+                            <component :is="VueApexCharts" type="radialBar" :options="stChart" :series="[seriesData[1]]" height="350" />
                         </div>
                     </div>
 
@@ -162,8 +215,8 @@ definePageMeta({
                             <p class="text-3xl md:text-3xl text-white font-bold mb-2">ความชื้น</p>
                         </div>
                         <div class="flex justify-between items-center w-full">
-                            <component :is="VueApexCharts" type="radialBar" :options="humiChart" :series="[seriesData[1]]" height="350" />
-                            <component :is="VueApexCharts" type="radialBar" :options="shChart" :series="[seriesData[5]]" height="350" />
+                            <component :is="VueApexCharts" type="radialBar" :options="humiChart" :series="[seriesData[2]]" height="350" />
+                            <component :is="VueApexCharts" type="radialBar" :options="shChart" :series="[seriesData[3]]" height="350" />
                         </div>
                     </div>
                 </div>
@@ -173,10 +226,10 @@ definePageMeta({
                         <p class="text-3xl md:text-3xl text-white font-bold mb-2">ค่าในดิน</p>
                     </div>
                     <div class="flex justify-between items-center w-full">
-                        <component :is="VueApexCharts" type="radialBar" :options="sphChart" :series="[seriesData[6]]" height="300" />
-                        <component :is="VueApexCharts" type="radialBar" :options="snChart" :series="[seriesData[8]]" height="300" />
-                        <component :is="VueApexCharts" type="radialBar" :options="spChart" :series="[seriesData[9]]" height="300" />
-                        <component :is="VueApexCharts" type="radialBar" :options="skChart" :series="[seriesData[10]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="sphChart" :series="[seriesData[7]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="snChart" :series="[seriesData[9]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="spChart" :series="[seriesData[10]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="skChart" :series="[seriesData[11]]" height="300" />
                     </div>
                 </div>
 
@@ -185,10 +238,10 @@ definePageMeta({
                         <p class="text-3xl md:text-3xl text-white font-bold mb-2">ค่าอื่นๆ</p>
                     </div>
                     <div class="flex justify-between items-center w-full">
-                        <component :is="VueApexCharts" type="radialBar" :options="secChart" :series="[seriesData[7]]" height="300" />
-                        <component :is="VueApexCharts" type="radialBar" :options="pressureChart" :series="[seriesData[3]]" height="300" />
-                        <component :is="VueApexCharts" type="radialBar" :options="luxChart" :series="[seriesData[2]]" height="300" />
-                        <component :is="VueApexCharts" type="radialBar" :options="windChart" :series="[seriesData[11]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="secChart" :series="[seriesData[8]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="pressureChart" :series="[seriesData[4]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="luxChart" :series="[seriesData[5]]" height="300" />
+                        <component :is="VueApexCharts" type="radialBar" :options="windChart" :series="[seriesData[12]]" height="300" />
                     </div>
                 </div>
             </template>

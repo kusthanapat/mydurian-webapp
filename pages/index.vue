@@ -106,104 +106,143 @@
 
   const adminPins = ref([]);
 
-  // ปรับปรุงฟังก์ชัน getStatusEmoji ให้ส่งคืนทั้ง URL และสี
-  const getStatusEmoji = (sensorData) => {
-    if (!sensorData) return { url: happyface, color: '#23ff00' };  // สีเขียว
-
-    // Temperature conditions
-    if (sensorData.Temperature >= 40) return { url: sadface, color: '#ff0000' };  // สีแดง
-    if (sensorData.Temperature >= 35) return { url: neutralface, color: '#fff300' };  // สีเหลือง
-
-    // Humidity conditions
-    if (sensorData.Humidity <= 60 || sensorData.Humidity >= 80) return { url: sadface, color: '#ff0000' };
-    if (sensorData.Humidity <= 55 || sensorData.Humidity >= 75) return { url: neutralface, color: '#fff300' };
-
-    // Soil Humidity conditions
-    if (sensorData.SH <= 20 || sensorData.SH >= 40) return { url: sadface, color: '#ff0000' };
-    if (sensorData.SH <= 25 || sensorData.SH >= 45) return { url: neutralface, color: '#fff300' };
-
-    // Soil Temperature conditions
-    if (sensorData.ST >= 35) return { url: sadface, color: '#ff0000' };
-    if (sensorData.ST >= 30) return { url: neutralface, color: '#fff300' };
-
-    // Soil pH conditions
-    if (sensorData.SPH >= 8) return { url: sadface, color: '#ff0000' };
-    if (sensorData.SPH >= 7) return { url: neutralface, color: '#fff300' };
-
-    // Soil EC conditions
-    if (sensorData.SEC >= 1.2) return { url: sadface, color: '#ff0000' };
-    if (sensorData.SEC >= 1) return { url: neutralface, color: '#fff300' };
-
-    // Soil Nutrients conditions
-    const nutrients = ['SN', 'SP', 'SK'];
-    for (const nutrient of nutrients) {
-      if (sensorData[nutrient] >= 15) return { url: sadface, color: '#ff0000' };
-      if (sensorData[nutrient] >= 12) return { url: neutralface, color: '#fff300' };
-    }
-
-    return { url: happyface, color: '#23ff00' };
-  };
-
-
   // แก้ไขฟังก์ชัน loadAdminPins
   const loadAdminPins = async () => {
     try {
-      const usersRef = collection(db, 'users');
-      const adminQuery = query(usersRef, where('status', '==', 'admin'));
-      const querySnapshot = await getDocs(adminQuery);
+        const usersRef = collection(db, 'users');
+        const adminQuery = query(usersRef, where('status', '==', 'admin'));
+        const querySnapshot = await getDocs(adminQuery);
 
-      const pins = [];
-      
-      for (const adminDoc of querySnapshot.docs) {
-        const adminData = adminDoc.data();
+        const pins = [];
         
-        const googleSheetUrl = adminData.googleSheet;
-        
-        let latestData = null;
-        if (googleSheetUrl) {
-          try {
-            const response = await fetch(googleSheetUrl);
-            const data = await response.json();
-            latestData = data[data.length - 1];
-          } catch (error) {
-            console.error('Error fetching sheet data:', error);
-          }
+        for (const adminDoc of querySnapshot.docs) {
+            const adminData = adminDoc.data();
+            
+            const googleSheetUrl = adminData.googleSheet;
+            
+            let latestData = null;
+            // เพิ่มการตรวจสอบว่าเป็น URL ที่ถูกต้องหรือไม่
+            if (googleSheetUrl && 
+                googleSheetUrl.trim() !== '' && 
+                googleSheetUrl.startsWith('http')) {  // เช็คว่าเป็น URL จริงๆ
+                try {
+                    const response = await fetch(googleSheetUrl);
+                    
+                    if (!response.ok) {
+                        console.log('Failed to fetch Google Sheet:', googleSheetUrl);
+                        throw new Error('Failed to fetch');
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data && 
+                        Array.isArray(data) && 
+                        data.length > 0 && 
+                        data[data.length - 1].hasOwnProperty('อุณหภูมิ_c')) {
+                        latestData = data[data.length - 1];
+                    } else {
+                        console.log('Invalid data format from sheet:', googleSheetUrl);
+                    }
+                } catch (error) {
+                    console.log('Error fetching sheet:', error);
+                }
+            } else {
+                console.log('Invalid Google Sheet URL:', googleSheetUrl);
+            }
+
+            const fields = Object.keys(adminData);
+            const coordinateFields = fields.filter(field => 
+                field.startsWith('coordinate_x_') || field.startsWith('coordinate_y_')
+            );
+
+            const locations = new Set(
+                coordinateFields.map(field => {
+                    const match = field.match(/coordinate_[xy]_(.+)/);
+                    return match ? match[1] : null;
+                }).filter(Boolean)
+            );
+
+            for (const location of locations) {
+                const [locationName, poleNumber] = location.split('_');
+                const status = getStatusEmoji(latestData);
+                pins.push({
+                    id: location,
+                    x: adminData[`coordinate_x_${location}`] || 50,
+                    y: adminData[`coordinate_y_${location}`] || 50,
+                    locationName: locationName,
+                    poleNumber: poleNumber,
+                    sensorData: latestData,
+                    statusEmoji: status.url,
+                    statusColor: status.color
+                });
+            }
         }
 
-        const fields = Object.keys(adminData);
-        const coordinateFields = fields.filter(field => 
-          field.startsWith('coordinate_x_') || field.startsWith('coordinate_y_')
-        );
+        adminPins.value = pins;
+        console.log('Loaded admin pins:', adminPins.value);
+    } catch (error) {
+        console.error('Error loading admin pins:', error);
+    }
+};
 
-        const locations = new Set(
-          coordinateFields.map(field => {
-            const match = field.match(/coordinate_[xy]_(.+)/);
-            return match ? match[1] : null;
-          }).filter(Boolean)
-        );
+    // ปรับปรุงฟังก์ชัน getStatusEmoji ให้ส่งคืนทั้ง URL และสี
+    const getStatusEmoji = (sensorData) => {
+      // เพิ่ม console.log ตรงนี้เพื่อดูข้อมูลทั้งหมดที่เข้ามา
+      console.log('Received sensorData:', sensorData);
 
-        for (const location of locations) {
-          const [locationName, poleNumber] = location.split('_');
-          const status = getStatusEmoji(latestData);
-          pins.push({
-            id: location,
-            x: adminData[`coordinate_x_${location}`] || 50,
-            y: adminData[`coordinate_y_${location}`] || 50,
-            locationName: locationName,
-            poleNumber: poleNumber,
-            sensorData: latestData,
-            statusEmoji: status.url,
-            statusColor: status.color
-          });
-        }
+      if (!sensorData) {
+        console.log('sensorData is null or undefined');
+        return { url: happyface, color: '#23ff00' };
       }
 
-      adminPins.value = pins;
-      console.log('Loaded admin pins:', adminPins.value);
-    } catch (error) {
-      console.error('Error loading admin pins:', error);
-    }
-  };
+      // ตรวจสอบค่าแต่ละตัว
+      console.log('Temperature sensorData:', sensorData.อุณหภูมิ_c);
+      console.log('Humidity sensorData:', sensorData.ความชื้น_เปอร์เซ็นต์);
+      console.log('Soil Humidity sensorData:', sensorData.ความชื้นดิน_เปอร์เซ็นต์);
+      console.log('Soil Temperature sensorData:', sensorData.อุณหภูมิดิน_c);
+      console.log('PH sensorData:', sensorData.PH);
+      console.log('EC sensorData:', sensorData.ความเค็ม_เปอร์เซ็นต์);
+      console.log('Nitrogen sensorData:', sensorData.ไนโตรเจน_เปอร์เซ็นต์);
+      console.log('Phosphorus sensorData:', sensorData.ฟอสฟอรัส_เปอร์เซ็นต์);
+      console.log('Potassium sensorData:', sensorData.โพแทสเซียม_เปอร์เซ็นต์);
+      if (!sensorData) return { url: happyface, color: '#23ff00' };
+
+      // Temperature conditions
+      if (sensorData.อุณหภูมิ_c >= 40) return { url: sadface, color: '#ff0000' };
+      if (sensorData.อุณหภูมิ_c >= 35 && sensorData.อุณหภูมิ_c < 40) return { url: neutralface, color: '#fff300' };
+
+      // Humidity conditions
+      if (sensorData.ความชื้น_เปอร์เซ็นต์ <= 60 || sensorData.ความชื้น_เปอร์เซ็นต์ >= 80) return { url: sadface, color: '#ff0000' };
+      if (sensorData.ความชื้น_เปอร์เซ็นต์ <= 55 || sensorData.ความชื้น_เปอร์เซ็นต์ >= 75) return { url: neutralface, color: '#fff300' };
+
+      // Soil Humidity conditions
+      if (sensorData.ความชื้นดิน_เปอร์เซ็นต์ <= 20 || sensorData.ความชื้นดิน_เปอร์เซ็นต์ >= 40) return { url: sadface, color: '#ff0000' };
+      if (sensorData.ความชื้นดิน_เปอร์เซ็นต์ <= 25 || sensorData.ความชื้นดิน_เปอร์เซ็นต์ >= 45) return { url: neutralface, color: '#fff300' };
+
+      // Soil Temperature conditions
+      if (sensorData.อุณหภูมิดิน_c >= 35) return { url: sadface, color: '#ff0000' };
+      if (sensorData.อุณหภูมิดิน_c >= 30 && sensorData.อุณหภูมิดิน_c < 35) return { url: neutralface, color: '#fff300' };
+
+      // Soil pH conditions
+      if (sensorData.PH >= 8) return { url: sadface, color: '#ff0000' };
+      if (sensorData.PH >= 7 && sensorData.PH < 8) return { url: neutralface, color: '#fff300' };
+
+      // Soil EC conditions
+      if (sensorData.ความเค็ม_เปอร์เซ็นต์ >= 1.2) return { url: sadface, color: '#ff0000' };
+      if (sensorData.ความเค็ม_เปอร์เซ็นต์ >= 1 && sensorData.ความเค็ม_เปอร์เซ็นต์ < 1.2) return { url: neutralface, color: '#fff300' };
+
+      // Soil Nutrients conditions
+      if (sensorData.ไนโตรเจน_เปอร์เซ็นต์ >= 15) return { url: sadface, color: '#ff0000' };
+      if (sensorData.ไนโตรเจน_เปอร์เซ็นต์ >= 12 && sensorData.ไนโตรเจน_เปอร์เซ็นต์ < 15) return { url: neutralface, color: '#fff300' };
+      
+      if (sensorData.ฟอสฟอรัส_เปอร์เซ็นต์ >= 15) return { url: sadface, color: '#ff0000' };
+      if (sensorData.ฟอสฟอรัส_เปอร์เซ็นต์ >= 12 && sensorData.ฟอสฟอรัส_เปอร์เซ็นต์ < 15) return { url: neutralface, color: '#fff300' };
+      
+      if (sensorData.โพแทสเซียม_เปอร์เซ็นต์ >= 15) return { url: sadface, color: '#ff0000' };
+      if (sensorData.โพแทสเซียม_เปอร์เซ็นต์ >= 12 && sensorData.โพแทสเซียม_เปอร์เซ็นต์ < 15) return { url: neutralface, color: '#fff300' };
+
+      return { url: happyface, color: '#23ff00' };
+    };
 
   // แสดง tooltip
   const showTooltip = (pin) => {
@@ -239,6 +278,7 @@
   });
   
 </script>
+
 <template>
   <!-- Hero Section -->
   <div class="relative">
@@ -399,17 +439,17 @@
                       />
                   </div>
                   <!-- Show sensor data if available -->
-                  <div v-if="pin.sensorData" class="text-xs mt-1">
+                  <!-- <div v-if="pin.sensorData" class="text-xs mt-1">
                       <div>Temp: {{ pin.sensorData.Temperature }}°C</div>
                       <div>Humidity: {{ pin.sensorData.Humidity }}%</div>
                       <div>Soil Humidity: {{ pin.sensorData.SH }}%</div>
                       <div>Soil Temp: {{ pin.sensorData.ST }}°C</div>
                       <div>Soil pH: {{ pin.sensorData.SPH }}</div>
-                      <div>Soil EC: {{ pin.sensorData.SEC }}</div>
-                      <div>Soil N: {{ pin.sensorData.SN }}</div>
-                      <div>Soil P: {{ pin.sensorData.SP }}</div>
-                      <div>Soil K: {{ pin.sensorData.SK }}</div>
-                  </div>
+                      <div>Soil EC: {{ pin.sensorData.SEC }} %</div>
+                      <div>Soil N: {{ pin.sensorData.SN }} %</div>
+                      <div>Soil P: {{ pin.sensorData.SP }} %</div>
+                      <div>Soil K: {{ pin.sensorData.SK }} %</div>
+                  </div> -->
               </div>
           </div>
       </div>

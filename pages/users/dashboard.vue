@@ -57,6 +57,22 @@
         }
     }
 
+    const columnMapping = {
+        temperature: "อุณหภูมิ_c",
+        soilTemperature: "อุณหภูมิดิน_c",
+        humidity: "ความชื้น_เปอร์เซ็นต์",
+        soilMoisture: "ความชื้นดิน_เปอร์เซ็นต์",
+        pressure: "แรงดัน_hPa",
+        lightIntensity: "ความเข้มแสง_lux",
+        foat: "ลูกลอย",
+        ph: "PH",
+        salinity: "ความเค็ม_เปอร์เซ็นต์",
+        nitrogen: "ไนโตรเจน_เปอร์เซ็นต์",
+        phosphorus: "ฟอสฟอรัส_เปอร์เซ็นต์",
+        potassium: "โพแทสเซียม_เปอร์เซ็นต์",
+        windSpeed: "ความเร็วลม_กิโลเมตรต่อชั่วโมง"
+    };
+
     // ฟังก์ชันดึงข้อมูลจาก Google Sheets
     function fetchDataAndCreateCharts() {
         if (!googleSheetURL.value) {
@@ -72,18 +88,31 @@
 
                     // กำหนดค่าในแต่ละกราฟ
                     seriesData.value = [
-                        parseFloat(latestRow.Temperature) || 0,
-                        parseFloat(latestRow.Humidity) || 0,
-                        parseFloat(latestRow.Lux) || 0,
-                        parseFloat(latestRow.Pressure) || 0,
-                        parseFloat(latestRow.ST) || 0,
-                        parseFloat(latestRow.SH) || 0,
-                        parseFloat(latestRow.SPH) || 0,
-                        parseFloat(latestRow.SEC) || 0,
-                        parseFloat(latestRow.SN) || 0,
-                        parseFloat(latestRow.SP) || 0,
-                        parseFloat(latestRow.SK) || 0,
-                        parseFloat(latestRow.Wind) || 0
+                        // parseFloat(latestRow.อุณหภูมิ_เซลเซียส) || 0,
+                        // parseFloat(latestRow.ความชื้น_เปอร์เซ็นต์) || 0,
+                        // parseFloat(latestRow.ความเข้มแสง_lux) || 0,
+                        // parseFloat(latestRow.แรงดัน_hPa) || 0,
+                        // parseFloat(latestRow.อุณหภูมิดิน_เซลเซียส) || 0,
+                        // parseFloat(latestRow.ความชื้นดิน_เปอร์เซ็นต์) || 0,
+                        // parseFloat(latestRow.PH) || 0,
+                        // parseFloat(latestRow.ความเค็ม_เปอร์เซ็นต์) || 0,
+                        // parseFloat(latestRow.ไนโตรเจน_เปอร์เซ็นต์) || 0,
+                        // parseFloat(latestRow.ฟอสฟอรัส_เปอร์เซ็นต์) || 0,
+                        // parseFloat(latestRow.โพแทสเซียม_เปอร์เซ็นต์) || 0,
+                        // parseFloat(latestRow.ความเร็วลม_เมตรต่อวินาที) || 0
+                        parseFloat(latestRow[columnMapping.temperature]) || 0,
+                        parseFloat(latestRow[columnMapping.soilTemperature]) || 0,
+                        parseFloat(latestRow[columnMapping.humidity]) || 0,
+                        parseFloat(latestRow[columnMapping.soilMoisture]) || 0,
+                        parseFloat(latestRow[columnMapping.pressure]) || 0,
+                        parseFloat(latestRow[columnMapping.lightIntensity]) || 0,
+                        latestRow[columnMapping.foat],
+                        parseFloat(latestRow[columnMapping.ph]) || 0,
+                        parseFloat(latestRow[columnMapping.salinity]) || 0,
+                        parseFloat(latestRow[columnMapping.nitrogen]) || 0,
+                        parseFloat(latestRow[columnMapping.phosphorus]) || 0,
+                        parseFloat(latestRow[columnMapping.potassium]) || 0,
+                        parseFloat(latestRow[columnMapping.windSpeed]) || 0
                     ];
                 }
             })
@@ -114,6 +143,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -147,6 +177,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -180,6 +211,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -213,6 +245,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -246,6 +279,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -279,6 +313,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -312,6 +347,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -345,6 +381,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -378,6 +415,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -411,6 +449,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -444,6 +483,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -477,6 +517,7 @@
                     value: {
                         show: true,
                         fontSize: '16px',
+                        color: '#ffffff',
                         formatter: function (val) {
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
@@ -502,7 +543,7 @@
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <VueApexCharts type="radialBar" :options="tempChart" :series="[seriesData[0]]" height="350" />
-                    <VueApexCharts type="radialBar" :options="stChart" :series="[seriesData[4]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="stChart" :series="[seriesData[1]]" height="350" />
                 </div>
             </div>
 
@@ -512,8 +553,8 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">ความชื้น</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                    <VueApexCharts type="radialBar" :options="humiChart" :series="[seriesData[1]]" height="350" />
-                    <VueApexCharts type="radialBar" :options="shChart" :series="[seriesData[5]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="humiChart" :series="[seriesData[2]]" height="350" />
+                    <VueApexCharts type="radialBar" :options="shChart" :series="[seriesData[3]]" height="350" />
                 </div>
             </div>
         </div>
@@ -545,10 +586,10 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">ค่าในดิน</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                    <VueApexCharts type="radialBar" :options="sphChart" :series="[seriesData[6]]" height="300" />
-                    <VueApexCharts type="radialBar" :options="snChart" :series="[seriesData[8]]" height="300" />
-                    <VueApexCharts type="radialBar" :options="spChart" :series="[seriesData[9]]" height="300" />
-                    <VueApexCharts type="radialBar" :options="skChart" :series="[seriesData[10]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="sphChart" :series="[seriesData[7]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="snChart" :series="[seriesData[9]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="spChart" :series="[seriesData[10]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="skChart" :series="[seriesData[11]]" height="300" />
                 </div>
         </div>
 
@@ -557,10 +598,10 @@
                     <p class="text-3xl md:text-3xl text-white font-bold mb-2">ค่าอื่นๆ</p>
                 </div>
                 <div class="flex justify-between items-center w-full">
-                    <VueApexCharts type="radialBar" :options="secChart" :series="[seriesData[7]]" height="300" />
-                    <VueApexCharts type="radialBar" :options="pressureChart" :series="[seriesData[3]]" height="300" />
-                    <VueApexCharts type="radialBar" :options="luxChart" :series="[seriesData[2]]" height="300" />
-                    <VueApexCharts type="radialBar" :options="windChart" :series="[seriesData[11]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="secChart" :series="[seriesData[8]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="pressureChart" :series="[seriesData[4]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="luxChart" :series="[seriesData[5]]" height="300" />
+                    <VueApexCharts type="radialBar" :options="windChart" :series="[seriesData[12]]" height="300" />
                 </div>
         </div>
     </div>
