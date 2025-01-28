@@ -1,171 +1,173 @@
 <script setup>
-    import { useRoute } from 'vue-router';
-    import { ref, onMounted, watch } from 'vue';
-    import { initializeApp } from 'firebase/app';
-    import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { useRoute } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-    definePageMeta({
-        layout: "defaultuser"
-    });
+definePageMeta({
+    layout: "defaultuser"
+});
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
-        authDomain: "checklogin-67a92.firebaseapp.com",
-        projectId: "checklogin-67a92",
-        storageBucket: "checklogin-67a92.appspot.com",
-        messagingSenderId: "246538906966",
-        appId: "1:246538906966:web:2e4399caaa96210df23af7",
-        measurementId: "G-X3068LRCWT"
-    };
+const firebaseConfig = {
+    apiKey: "AIzaSyBD1lpwftzNmjzPE7_Jw2M6wFz_edz6qX4",
+    authDomain: "checklogin-67a92.firebaseapp.com",
+    projectId: "checklogin-67a92",
+    storageBucket: "checklogin-67a92.appspot.com",
+    messagingSenderId: "246538906966",
+    appId: "1:246538906966:web:2e4399caaa96210df23af7",
+    measurementId: "G-X3068LRCWT"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const route = useRoute();
-    const uid = route.query.uid;
+const route = useRoute();
+const uid = route.query.uid;
 
-    console.log('User UID:', uid);
+console.log('User UID:', uid);
 
-    const googleSheetURL = ref('');
-    const dataOptions = ref([]);
-    const selectedData = ref('');
-    const usersData = ref([]);
+const googleSheetURL = ref('');
+const dataOptions = ref([]);
+const selectedData = ref('');
+const usersData = ref([]);
 
-    async function fetchGoogleSheetURL() {
-        try {
-            const docRef = doc(db, 'users', uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                googleSheetURL.value = docSnap.data().googleSheet;
-                console.log('Google Sheet URL:', googleSheetURL.value);
-                await selectData();
-                setLatestMonth(); // Set default month after data is loaded
-            } else {
-                console.error('No such document!');
-            }
-        } catch (error) {
-            console.error('Error fetching document:', error);
+async function fetchGoogleSheetURL() {
+    try {
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            googleSheetURL.value = docSnap.data().googleSheet;
+            console.log('Google Sheet URL:', googleSheetURL.value);
+            await selectData();
+            setLatestMonth();
+        } else {
+            console.error('No such document!');
         }
+    } catch (error) {
+        console.error('Error fetching document:', error);
+    }
+}
+
+function selectData() {
+    if (!googleSheetURL.value) {
+        console.error('Google Sheet URL is not set');
+        return;
     }
 
-    function selectData() {
-        if (!googleSheetURL.value) {
-            console.error('Google Sheet URL is not set');
-            return;
-        }
+    return fetch(googleSheetURL.value)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fetched data:', data);
 
-        return fetch(googleSheetURL.value)
+            if (Array.isArray(data) && data.length > 0) {
+                const availableMonths = [];
+                data.forEach(row => {
+                    console.log('Row TimeStamp:', row.TimeStamp);
+                    
+                    const [datePart] = row.TimeStamp.split(',');
+                    const [month, day, year] = datePart.trim().split('/');
+                    
+                    const date = new Date(year, parseInt(month) - 1, day);
+                    
+                    if (isNaN(date.getTime())) {
+                        console.error('Invalid Date:', row.TimeStamp);
+                    } else {
+                        const monthStr = String(date.getMonth() + 1).padStart(2, '0');
+                        const yearStr = date.getFullYear();
+                        const monthYear = `${monthStr}-${yearStr}`;
+
+                        if (!availableMonths.includes(monthYear)) {
+                            availableMonths.push(monthYear);
+                        }
+                    }
+                });
+
+                const monthNames = [
+                    "ม.ค", "ก.พ", "มี.ค", "เม.ย", "พ.ค", "มิ.ย",
+                    "ก.ค", "ส.ค", "ก.ย", "ต.ค", "พ.ย", "ธ.ค"
+                ];
+                dataOptions.value = availableMonths.map(monthYear => {
+                    const [month, year] = monthYear.split('-');
+                    return {
+                        value: monthYear,
+                        text: `${monthNames[parseInt(month) - 1]} ${year}`
+                    };
+                }).sort((a, b) => b.value.localeCompare(a.value));
+            }
+        });
+}
+
+function setLatestMonth() {
+    if (dataOptions.value.length > 0) {
+        selectedData.value = dataOptions.value[0].value;
+    }
+}
+
+function updateTableData(selectedValue, allData) {
+    const [month, year] = selectedValue.split('-');
+    usersData.value = allData.filter(row => {
+        const date = new Date(row.TimeStamp);
+        return date.getMonth() + 1 === parseInt(month) && date.getFullYear() === parseInt(year);
+    });
+}
+
+watch(selectedData, (newVal) => {
+    if (newVal && googleSheetURL.value) {
+        fetch(googleSheetURL.value)
             .then(response => response.json())
             .then(data => {
-                console.log('Fetched data:', data);
-
-                if (Array.isArray(data) && data.length > 0) {
-                    const availableMonths = [];
-                    data.forEach(row => {
-                        console.log('Row TimeStamp:', row.TimeStamp);
-                        
-                        // แยกวันที่และเวลา
-                        const [datePart] = row.TimeStamp.split(',');
-                        // แยกส่วนประกอบของวันที่ (เดือน/วัน/ปี)
-                        const [month, day, year] = datePart.trim().split('/');
-                        
-                        // สร้าง Date object โดยใช้รูปแบบที่ถูกต้อง
-                        const date = new Date(year, parseInt(month) - 1, day);
-                        
-                        if (isNaN(date.getTime())) {
-                            console.error('Invalid Date:', row.TimeStamp);
-                        } else {
-                            const monthStr = String(date.getMonth() + 1).padStart(2, '0');
-                            const yearStr = date.getFullYear();
-                            const monthYear = `${monthStr}-${yearStr}`;
-
-                            if (!availableMonths.includes(monthYear)) {
-                                availableMonths.push(monthYear);
-                            }
-                        }
-                    });
-
-                    const monthNames = [
-                        "ม.ค", "ก.พ", "มี.ค", "เม.ย", "พ.ค", "มิ.ย",
-                        "ก.ค", "ส.ค", "ก.ย", "ต.ค", "พ.ย", "ธ.ค"
-                    ];
-                    dataOptions.value = availableMonths.map(monthYear => {
-                        const [month, year] = monthYear.split('-');
-                        return {
-                            value: monthYear,
-                            text: `${monthNames[parseInt(month) - 1]} ${year}`
-                        };
-                    }).sort((a, b) => b.value.localeCompare(a.value));
-                }
+                updateTableData(newVal, data);
             });
     }
+});
 
-    function setLatestMonth() {
-        if (dataOptions.value.length > 0) {
-            selectedData.value = dataOptions.value[0].value; // Select first (latest) month
-        }
-    }
+function downloadCSV() {
+    const csvRows = [];
+    const headers = Object.keys(usersData.value[0] || {}).join(',');
+    csvRows.push(headers);
 
-    function updateTableData(selectedValue, allData) {
-        const [month, year] = selectedValue.split('-');
-        usersData.value = allData.filter(row => {
-            const date = new Date(row.TimeStamp);
-            return date.getMonth() + 1 === parseInt(month) && date.getFullYear() === parseInt(year);
-        });
-    }
-
-    watch(selectedData, (newVal) => {
-        if (newVal && googleSheetURL.value) {
-            fetch(googleSheetURL.value)
-                .then(response => response.json())
-                .then(data => {
-                    updateTableData(newVal, data);
-                });
-        }
+    usersData.value.forEach(user => {
+        csvRows.push(Object.values(user).join(','));
     });
 
-    function downloadCSV() {
-        const csvRows = [];
-        const headers = Object.keys(usersData.value[0] || {}).join(',');
-        csvRows.push(headers);
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
 
-        usersData.value.forEach(user => {
-            csvRows.push(Object.values(user).join(','));
-        });
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'data.csv');
+    a.click();
+}
 
-        const csvContent = csvRows.join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', 'data.csv');
-        a.click();
-    }
-
-    onMounted(() => {
-        fetchGoogleSheetURL();
-    });
+onMounted(() => {
+    fetchGoogleSheetURL();
+});
 </script>
 
 <template>
-    <div class="h-full w-full pr-28 pl-28 space-y-16 pt-20">
-        <div class="w-full flex space-x-14 items-baseline">
-            <div class="w-full flex items-baseline responsive-container">
-                <h2 class="text-3xl md:text-2xl text-white font-bold mb-8 responsive-heading">เลือกข้อมูล:</h2>
-                <select v-model="selectedData" class="w-full h-full px-4 py-3 rounded-lg bg-slate-200 text-gray-500 border border-none responsive-select">
+    <div class="h-full w-full px-4 md:px-28 space-y-8 md:space-y-16 pt-10 md:pt-20">
+        <div class="w-full flex flex-col md:flex-row md:space-x-14 space-y-4 md:space-y-0 items-baseline">
+            <div class="w-full flex flex-col md:flex-row items-baseline gap-2 md:gap-4">
+                <h2 class="text-xl md:text-3xl text-white font-bold mb-2 md:mb-8">เลือกข้อมูล:</h2>
+                <select 
+                    v-model="selectedData" 
+                    class="w-full px-4 py-2 md:py-3 rounded-lg bg-slate-200 text-gray-500 border border-none text-base md:text-lg"
+                >
                     <option v-for="option in dataOptions" :key="option.value" :value="option.value">
                         {{ option.text }}
                     </option>
                 </select>
             </div>
-            <button @click="downloadCSV"
-                class="px-4 py-1 w-full h-full bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30">
+            <button 
+                @click="downloadCSV"
+                class="w-full md:w-auto px-4 py-2 bg-lime-500 text-white rounded-lg hover:bg-lime-400 transform hover:scale-105 transition-all shadow-lg hover:shadow-lime-500/30"
+            >
                 ดาวน์โหลดข้อมูล
             </button>
         </div>
 
-        <div class="table-container bg-white p-4 rounded-lg shadow-lg overflow-x-auto" :style="{ height: 'auto' }">
+        <div class="table-container bg-white p-2 md:p-4 rounded-lg shadow-lg overflow-x-auto w-full md:w-[90%] mx-auto">
             <table class="custom-table min-w-full border border-gray-800 border-collapse rounded-lg overflow-hidden shadow-md">
                 <thead>
                     <tr class="bg-gray-200">
@@ -210,36 +212,36 @@
 
 <style scoped>
 .table-container {
-    width: 90%;
-    margin: 0 auto;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 .custom-table {
     width: 100%;
+    min-width: 1000px;
 }
 
-@media (min-width: 340px) and (max-width: 768px) {
+@media (max-width: 768px) {
     th, td {
-        padding: 10px !important;
-        font-size: 0.875rem !important;
+        padding: 8px !important;
+        font-size: 14px !important;
+        white-space: nowrap;
     }
 
-    .text-white {
-        font-size: 1.25rem !important;
-    }
-    
-    .responsive-container {
-        gap: 1rem;
+    select {
+        width: 100% !important;
+        min-width: 200px;
     }
 
-    .responsive-heading {
-        font-size: 1rem !important;
-        margin-bottom: 0;
+    .table-container {
+        margin: 0 !important;
+        padding: 8px !important;
     }
+}
 
-    .responsive-select {
-        font-size: 0.875rem;
-        padding: 0.5rem;
+@media (min-width: 769px) and (max-width: 1024px) {
+    .table-container {
+        width: 95% !important;
     }
 }
 </style>
