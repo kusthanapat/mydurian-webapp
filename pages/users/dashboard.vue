@@ -352,7 +352,8 @@
                             // แปลงค่า val ให้อยู่ในช่วงที่ต้องการ เช่น min = 0, max = 100
                             let min = 0;
                             let max = 14;
-                            let normalizedVal = ((val - min) / (max - min)) * 100;
+                            // let normalizedVal = ((val - min) / (max - min));
+                            let normalizedVal = val;
                             return `${normalizedVal.toFixed(1)}`; // ปรับการแสดงผล
                         }
                     }
