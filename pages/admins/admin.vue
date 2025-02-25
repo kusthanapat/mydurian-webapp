@@ -1,5 +1,6 @@
 <script setup>
     import { ref, onMounted } from 'vue';
+    import { useRouter } from 'vue-router'; 
     import { initializeApp } from 'firebase/app';
     import { getFirestore, collection, getDocs, doc, getDoc, setDoc, query, where } from 'firebase/firestore';
 
@@ -90,6 +91,15 @@
             }
         } catch (error) {
             console.error("Error fetching data:", error);
+        }
+    };
+
+    const router = useRouter(); // สร้าง router instance
+
+    // ฟังก์ชันเปลี่ยนหน้าไปยัง `home.vue` ของ User
+    const goToUserHome = (user) => {
+        if (user.placeName) {
+            router.push(`/home?user=${encodeURIComponent(user.placeName)}`);
         }
     };
 
@@ -294,7 +304,7 @@
                                 <td class="px-4 py-2 border border-gray-300">{{ user.firstName }}</td>
                                 <td class="px-4 py-2 border border-gray-300">{{ user.poles }}</td>
                                 <td class="px-4 py-2 border border-gray-300">{{ user.status }}</td>
-                                <td class="px-4 py-2 border border-gray-300 cursor-pointer">{{ user.userpage}}</td>
+                                <td class="px-4 py-2 border border-gray-300 cursor-pointer" @click="goToUserHome(user)">{{ user.userpage}}</td>
                             </tr>
                         </tbody>
                     </table>
