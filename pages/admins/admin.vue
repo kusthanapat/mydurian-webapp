@@ -70,6 +70,7 @@
         try {
             const querySnapshot = await getDocs(collection(db, "users"));
             const users = querySnapshot.docs.map(doc => ({
+                uid: doc.id,
                 placeNo: doc.data().placeNo || '-',
                 placeName: doc.data().placeName || '-',
                 firstName: doc.data().firstName || '-',
@@ -98,8 +99,8 @@
 
     // ฟังก์ชันเปลี่ยนหน้าไปยัง `home.vue` ของ User
     const goToUserHome = (user) => {
-        if (user.placeName) {
-            router.push(`/home?user=${encodeURIComponent(user.placeName)}`);
+        if (user.uid) {
+            router.push(`/home?uid=${encodeURIComponent(user.uid)}`);
         }
     };
 
