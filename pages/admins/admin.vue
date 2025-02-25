@@ -100,7 +100,7 @@
     // ฟังก์ชันเปลี่ยนหน้าไปยัง `home.vue` ของ User
     const goToUserHome = (user) => {
         if (user.uid) {
-            navigateTo(`/home?uid=${encodeURIComponent(user.uid)}`);
+            navigateTo(`/users/home?uid=${encodeURIComponent(user.uid)}`);
         }
     };
 

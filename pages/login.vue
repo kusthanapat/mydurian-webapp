@@ -46,21 +46,6 @@
             alert('Login failed: ' + error.message);
         }
     };
-
-    // const handleLogin = async (event) => {
-    //     event.preventDefault();
-
-    //     try {
-    //         const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value);
-    //         const user = userCredential.user;
-
-    //         // Redirect to the home page with the user's UID as a query parameter
-    //         router.push({ path: 'users/home', query: { uid: user.uid } });
-    //     } catch (error) {
-    //         console.error('Error signing in:', error);
-    //         alert('Login failed: ' + error.message);
-    //     }
-    // };
 </script>
 
 <template>
