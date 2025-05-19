@@ -82,10 +82,10 @@ const pressureChart = ref(createRadialBarConfig('แรงดัน', 0, 1000, '
 const stChart = ref(createRadialBarConfig('อุณหภูมิดิน', 0, 100, '°C'));
 const shChart = ref(createRadialBarConfig('ความชื้นดิน', 0, 100, '%'));
 // const sphChart = ref(createRadialBarConfig('PH', 3, 9, 'unit'));
-const secChart = ref(createRadialBarConfig('ความเค็ม', 0, 2, ''));
-const snChart = ref(createRadialBarConfig('ไนโตรเจน', 0, 100, '%'));
-const spChart = ref(createRadialBarConfig('ฟอสฟอรัส', 0, 100, '%'));
-const skChart = ref(createRadialBarConfig('โพแทสเซียม', 0, 100, '%'));
+const secChart = ref(createRadialBarConfig('ความเค็ม', 0, 2, 'μS/cm'));
+const snChart = ref(createRadialBarConfig('ไนโตรเจน', 0, 100, 'ppm'));
+const spChart = ref(createRadialBarConfig('ฟอสฟอรัส', 0, 100, 'ppm'));
+const skChart = ref(createRadialBarConfig('โพแทสเซียม', 0, 100, 'ppm'));
 const windChart = ref(createRadialBarConfig('ความเร็วลม', 0, 100, 'km/hr'));
 
 onMounted(async () => {

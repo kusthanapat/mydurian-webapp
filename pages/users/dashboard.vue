@@ -388,7 +388,7 @@
                             let min = 0;
                             let max = 2;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)}`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} μS/cm`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -422,7 +422,7 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} ppm`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -456,7 +456,7 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} ppm`; // ปรับการแสดงผล
                         }
                     }
                 }
@@ -490,7 +490,7 @@
                             let min = 0;
                             let max = 100;
                             let normalizedVal = ((val - min) / (max - min)) * 100;
-                            return `${normalizedVal.toFixed(1)} %`; // ปรับการแสดงผล
+                            return `${normalizedVal.toFixed(1)} ppm`; // ปรับการแสดงผล
                         }
                     }
                 }
